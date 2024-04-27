@@ -7,23 +7,18 @@ import Message from "../models/Message";
 import Queue from "../models/Queue";
 import User from "../models/User";
 import Whatsapp from "../models/Whatsapp";
-import QuickMessage from "../models/QuickMessage";
-import fs from 'fs';
-import path from "path";
-import { lookup } from 'mime-types';
-import formatBody from "../helpers/Mustache";
 
 import ListMessagesService from "../services/MessageServices/ListMessagesService";
 import ShowTicketService from "../services/TicketServices/ShowTicketService";
+import FindOrCreateTicketService from "../services/TicketServices/FindOrCreateTicketService";
+import UpdateTicketService from "../services/TicketServices/UpdateTicketService";
 import DeleteWhatsAppMessage from "../services/WbotServices/DeleteWhatsAppMessage";
 import SendWhatsAppMedia from "../services/WbotServices/SendWhatsAppMedia";
 import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
 import CheckContactNumber from "../services/WbotServices/CheckNumber";
 import CheckIsValidContact from "../services/WbotServices/CheckIsValidContact";
-
-import { sendFacebookMessageMedia } from "../services/FacebookServices/sendFacebookMessageMedia";
-import sendFaceMessage from "../services/FacebookServices/sendFacebookMessage";
-
+import GetProfilePicUrl from "../services/WbotServices/GetProfilePicUrl";
+import CreateOrUpdateContactService from "../services/ContactServices/CreateOrUpdateContactService"; 
 type IndexQuery = {
   pageNumber: string;
 };
@@ -58,9 +53,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     queues
   });
 
-  if (ticket.channel === "whatsapp") {
-    SetTicketMessagesAsRead(ticket);
-  }
+  SetTicketMessagesAsRead(ticket);
 
   return res.json({ count, messages, ticket, hasMore });
 };
@@ -73,110 +66,16 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
   const ticket = await ShowTicketService(ticketId, companyId);
 
-
-  const pattern = /^\s*\[(.*?)\]$/;
-  const patternB = /\s*\*.*?\*/g;
-
-  const checaQuick = body.replace(patternB, '');
-  const matches = pattern.test(checaQuick);
-
-  if (matches) {
-
-    const extractedValue = pattern.exec(checaQuick)?.[1];
-    //console.log(extractedValue); 
-
-    try {
-      const quickMessage = await QuickMessage.findOne({
-        where: {
-          shortcode: extractedValue,
-          companyId: companyId,
-          userId: req.user.id,
-        },
-      });
-
-      if (quickMessage) {
-        const { mediaPath, mediaName } = quickMessage;
-
-        //const filePath = path.resolve(`public/company${companyId}`, mediaPath);
-        //const mediaX = await getMessageOptions(mediaName, filePath, companyId.toString());
-
-        //console.log(media);
-
-
-
-        const publicFolder = path.resolve(__dirname, "..", "..", "..", "backend/public");
-        console.log(publicFolder);
-        const filePath: string = `${publicFolder}/${mediaPath}`;
-        console.log(filePath);
-        const mimeType: string = lookup(filePath);
-        console.log(mimeType);
-        const fileData: Buffer = fs.readFileSync(filePath);
-        const fileStream = fs.createReadStream(filePath);
-        const media: Express.Multer.File = {
-          fieldname: 'medias', // Add the appropriate value
-          originalname: mediaName, // Add the appropriate value
-          encoding: '7bit', // Add the appropriate value
-          mimetype: mimeType, // Add the appropriate value
-          destination: publicFolder, // Add the appropriate value
-          filename: mediaPath,
-          path: filePath,
-          size: fileData.length,
-          buffer: Buffer.alloc(0), // Provide an empty buffer since the file is streamed
-          stream: fileStream
-        };
-        //console.log(media);
-
-
-        const senting = SendWhatsAppMedia({ media, ticket });
-        //console.log(senting);
-
-        return res.send();
-        //await SendWhatsAppMedia({ media, ticket });
-      }
-    } catch (error) {
-      console.error("Error checking shortcode:", error);
-      return null;
-    }
-
-  }
-
-
-  const { channel } = ticket;
-  if (channel === "whatsapp") {
-    SetTicketMessagesAsRead(ticket);
-  }
+  SetTicketMessagesAsRead(ticket);
 
   if (medias) {
-    if (channel === "whatsapp") {
-      await Promise.all(
-        medias.map(async (media: Express.Multer.File) => {
-          await SendWhatsAppMedia({ media, ticket, body: formatBody(body, ticket.contact) });
-        })
-      );
-    }
-
-    if (["facebook", "instagram"].includes(channel)) {
-      await Promise.all(
-        medias.map(async (media: Express.Multer.File) => {
-          await sendFacebookMessageMedia({ media, ticket });
-        })
-      );
-    }
-
-
+    await Promise.all(
+      medias.map(async (media: Express.Multer.File) => {
+        await SendWhatsAppMedia({ media, ticket });
+      })
+    );
   } else {
-
-
-
-    if (["facebook", "instagram"].includes(channel)) {
-      console.log(`Checking if ${ticket.contact.number} is a valid ${channel} contact`)
-      await sendFaceMessage({ body, ticket, quotedMsg });
-    }
-
-    if (channel === "whatsapp") {
-      await SendWhatsAppMessage({ body, ticket, quotedMsg });
-    }
-
+    const send = await SendWhatsAppMessage({ body, ticket, quotedMsg });
   }
 
   return res.send();
@@ -223,6 +122,24 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
 
     const CheckValidNumber = await CheckContactNumber(numberToTest, companyId);
     const number = CheckValidNumber.jid.replace(/\D/g, "");
+    const profilePicUrl = await GetProfilePicUrl(
+      number,
+      companyId
+    );
+    const contactData = {
+      name: `${number}`,
+      number,
+      profilePicUrl,
+      isGroup: false,
+      companyId
+    };
+
+    const contact = await CreateOrUpdateContactService(contactData);
+
+    const createTicket = await FindOrCreateTicketService(contact, whatsapp.id!, 0, companyId);
+
+    const ticket = await ShowTicketService(createTicket.id, companyId);
+  
 
     if (medias) {
       await Promise.all(
@@ -242,8 +159,18 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
         })
       );
     } else {
-
-      req.app.get("queues").messageQueue.add(
+      await SendWhatsAppMessage({ body, ticket });
+      setTimeout(async () => {
+        await UpdateTicketService({
+          ticketId: ticket.id,
+          ticketData: { status: "closed" },
+          companyId
+        });
+      }, 1000);
+      await createTicket.update({
+        lastMessage: body,
+      });
+/*       req.app.get("queues").messageQueue.add(
         "SendMessage",
         {
           whatsappId,
@@ -255,8 +182,10 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
 
         { removeOnComplete: false, attempts: 3 }
 
-      );
+      ); */
     }
+
+    SetTicketMessagesAsRead(ticket);
 
     return res.send({ mensagem: "Mensagem enviada" });
   } catch (err: any) {

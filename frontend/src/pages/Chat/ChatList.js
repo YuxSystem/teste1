@@ -12,7 +12,6 @@ import {
 import { useHistory, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { useDate } from "../../hooks/useDate";
-import Typography from '@material-ui/core/Typography';
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     height: "calc(100% - 58px)",
     overflow: "hidden",
     borderRadius: 0,
-    backgroundColor: theme.palette.boxlist,
+    backgroundColor: theme.palette.boxlist, //DARK MODE PLW DESIGN//
   },
   chatList: {
     display: "flex",
@@ -38,17 +37,9 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    backgroundColor: theme.palette.listaInterno,
   },
   listItem: {
     cursor: "pointer",
-    backgroundColor: theme.palette.fundoBackground,
-  },
-  inline: {
-    color: theme.palette.corTextobarra,
-  },
-  icon: {
-    color: theme.palette.corIconespaginas,
   },
 }));
 
@@ -74,7 +65,7 @@ export default function ChatList({
     if (unreadMessages(chat) > 0) {
       try {
         await api.post(`/chats/${chat.id}/read`, { userId: user.id });
-      } catch (err) { }
+      } catch (err) {}
     }
 
     if (id !== chat.uuid) {
@@ -118,7 +109,7 @@ export default function ChatList({
 
   const getItemStyle = (chat) => {
     return {
-      borderLeft: chat.uuid === id ? "6px solid #34E23C" : null,
+      borderLeft: chat.uuid === id ? "6px solid #002d6e" : null,
       backgroundColor: chat.uuid === id ? "theme.palette.chatlist" : null,
     };
   };
@@ -147,35 +138,12 @@ export default function ChatList({
                   button
                 >
                   <ListItemText
-                    primary={
-                      <>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {getPrimaryText(chat)}
-                        </Typography>
-                      </>
-                    }
-                    secondary={
-                      <>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {getSecondaryText(chat)}
-                        </Typography>
-                      </>
-                    }
+                    primary={getPrimaryText(chat)}
+                    secondary={getSecondaryText(chat)}
                   />
-
                   {chat.ownerId === user.id && (
                     <ListItemSecondaryAction>
-                      <IconButton className={classes.icon}
+                      <IconButton
                         onClick={() => {
                           goToMessages(chat).then(() => {
                             handleEditChat(chat);
@@ -184,10 +152,11 @@ export default function ChatList({
                         edge="end"
                         aria-label="delete"
                         size="small"
+                        style={{ marginRight: 5 }}
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton className={classes.icon}
+                      <IconButton
                         onClick={() => {
                           setSelectedChat(chat);
                           setConfirmModalOpen(true);

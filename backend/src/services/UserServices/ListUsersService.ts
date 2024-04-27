@@ -48,7 +48,7 @@ const ListUsersService = async ({
     order: [["createdAt", "DESC"]],
     include: [
       { model: Queue, as: "queues", attributes: ["id", "name", "color"] },
-      { model: Company, as: "company", attributes: ["id", "dueDate", "name"] }
+      { model: Company, as: "company", attributes: ["id", "name"] }
     ]
   });
 

@@ -1,4 +1,4 @@
-import { Op, fn, where, col, Filterable, Includeable, Sequelize } from "sequelize";
+import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
 import { startOfDay, endOfDay, parseISO } from "date-fns";
 
 import Ticket from "../../models/Ticket";
@@ -11,7 +11,6 @@ import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
 import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
-import isQueueIdHistoryBlocked from "../UserServices/isQueueIdHistoryBlocked";
 
 interface Request {
   searchParam?: string;
@@ -20,7 +19,7 @@ interface Request {
   date?: string;
   updatedAt?: string;
   showAll?: string;
-  userId: number;
+  userId: string;
   withUnreadMessages?: string;
   queueIds: number[];
   tags: number[];
@@ -48,28 +47,10 @@ const ListTicketsService = async ({
   withUnreadMessages,
   companyId
 }: Request): Promise<Response> => {
-
-  const isAllHistoricEnabled = await isQueueIdHistoryBlocked({ userRequest: userId });
-  const user = await ShowUserService(userId);
-  const userQueueIds = user.queues.map(queue => queue.id);
-
-  let whereCondition: Filterable["where"];
-
-  if (!isAllHistoricEnabled) {
-    whereCondition = {
+  let whereCondition: Filterable["where"] = {
     [Op.or]: [{ userId }, { status: "pending" }],
-      queueId: { [Op.or]: [queueIds, null] },
-      companyId
+    queueId: { [Op.or]: [queueIds, null] }
   };
-  } else {
-    whereCondition = {
-      [Op.or]: [{ userId }, { status: "pending" }],
-      companyId
-    };
-  }
-
-
-
   let includeCondition: Includeable[];
 
   includeCondition = [
@@ -100,93 +81,9 @@ const ListTicketsService = async ({
     },
   ];
 
-  if (user.profile === "user" && user.allTicket === "enable") {
-    const TicketsUserFilter: any[] | null = [];
-
-    let ticketsIds = [];
-
-    if (!isAllHistoricEnabled) {
-      ticketsIds = await Ticket.findAll({
-        where: {
-          userId: { [Op.or]: [user.id, null] },
-          queueId: { [Op.or]: [queueIds, null] },
-          // status: "pending",
-          companyId
-        },
-      });
-    } else {
-      ticketsIds = await Ticket.findAll({
-        where: {
-          userId: { [Op.or]: [user.id, null] },
-          // queueId: { [Op.or]: [queueIds, null] },
-          // status: "pending",
-          companyId
-        },
-      });
-    }
-
-    if (ticketsIds) {
-      TicketsUserFilter.push(ticketsIds.map(t => t.id));
-    }
-    // }
-
-    const ticketsIntersection: number[] = intersection(...TicketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: ticketsIntersection
-    };
-  }
-
-
-  if (user.profile === "user" && user.allTicket === "disable") {
-    const TicketsUserFilter: any[] | null = [];
-
-    let ticketsIds = [];
-
-    if (!isAllHistoricEnabled) {
-      ticketsIds = await Ticket.findAll({
-        where: {
-          companyId,
-          userId:
-            { [Op.or]: [user.id, null] },
-          //status: "pending",
-          queueId: queueIds
-        },
-      });
-    } else {
-      ticketsIds = await Ticket.findAll({
-        where: {
-          userId: { [Op.or]: [user.id, null] },
-          companyId,
-          queueId: { [Op.not]: null }
-          // queueId: { [Op.in] : queueIds},
-        },
-      });
-    }
-
-    if (ticketsIds) {
-      TicketsUserFilter.push(ticketsIds.map(t => t.id));
-    }
-    // }
-
-    const ticketsIntersection: number[] = intersection(...TicketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: ticketsIntersection
-    };
-  }
-
-  if (showAll === "true" && (user.profile === "admin" || user.allUserChat === "enabled")) {
-    if (isAllHistoricEnabled) {
-      whereCondition = {}
-    } else {
+  if (showAll === "true") {
     whereCondition = { queueId: { [Op.or]: [queueIds, null] } };
   }
-  }
-
-
 
   if (status) {
     whereCondition = {
@@ -258,6 +155,9 @@ const ListTicketsService = async ({
   }
 
   if (withUnreadMessages === "true") {
+    const user = await ShowUserService(userId);
+    const userQueueIds = user.queues.map(queue => queue.id);
+
     whereCondition = {
       [Op.or]: [{ userId }, { status: "pending" }],
       queueId: { [Op.or]: [userQueueIds, null] },

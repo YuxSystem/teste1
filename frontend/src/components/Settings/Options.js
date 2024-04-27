@@ -31,15 +31,17 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   tab: {
-    backgroundColor: theme.palette.options,
+    backgroundColor: theme.palette.options,  //DARK MODE PLW DESIGN//
     borderRadius: 4,
     width: "100%",
     "& .MuiTab-wrapper": {
       color: theme.palette.fontecor,
-    },
+    },   //DARK MODE PLW DESIGN//
     "& .MuiTabs-flexContainer": {
       justifyContent: "center"
     }
+
+
   },
   paper: {
     padding: theme.spacing(2),
@@ -83,15 +85,12 @@ export default function Options(props) {
   const [callType, setCallType] = useState("enabled");
   const [chatbotType, setChatbotType] = useState("");
   const [CheckMsgIsGroup, setCheckMsgIsGroupType] = useState("enabled");
-  const [outsideMessageType, setOutsideMessageType] = useState("disabled");
+
   const [loadingUserRating, setLoadingUserRating] = useState(false);
   const [loadingScheduleType, setLoadingScheduleType] = useState(false);
   const [loadingCallType, setLoadingCallType] = useState(false);
   const [loadingChatbotType, setLoadingChatbotType] = useState(false);
   const [loadingCheckMsgIsGroup, setCheckMsgIsGroup] = useState(false);
-
-  const [loadingOutsideMessageType, setLoadingOutsideMessageType] = useState(false);
-  const [loadingOutsideQueueType, setLoadingOutsideQueueType] = useState(false);
 
 
   const [ipixcType, setIpIxcType] = useState("");
@@ -105,24 +104,19 @@ export default function Options(props) {
   const [loadingClientIdMkauthType, setLoadingClientIdMkauthType] = useState(false);
   const [clientsecretmkauthType, setClientSecrectMkauthType] = useState("");
   const [loadingClientSecrectMkauthType, setLoadingClientSecrectMkauthType] = useState(false);
-  
-  const [smtpauthType, setUrlSmtpauthType] = useState("");
-  const [loadingUrlSmtpauthType, setLoadingUrlSmtpauthType] = useState(false);
-  const [usersmtpauthType, setUserSmtpauthType] = useState("");
-  const [loadingSmtpauthType, setLoadingSmptauthType] = useState(false);
-  const [clientsecretsmtpauthType, setClientSecrectSmtpauthType] = useState("");
-  const [loadingClientSecrectSmtpauthType, setLoadingClientSecrectSmtpauthType] = useState(false);
 
   const [asaasType, setAsaasType] = useState("");
   const [loadingAsaasType, setLoadingAsaasType] = useState(false);
-
-  const { update } = useSettings();
+  
+  // recursos a mais da plw design
 
   const [SendGreetingAccepted, setSendGreetingAccepted] = useState("disabled");
   const [loadingSendGreetingAccepted, setLoadingSendGreetingAccepted] = useState(false);
-
+  
   const [SettingsTransfTicket, setSettingsTransfTicket] = useState("disabled");
   const [loadingSettingsTransfTicket, setLoadingSettingsTransfTicket] = useState(false);
+
+  const { update } = useSettings();
 
   useEffect(() => {
     if (Array.isArray(settings) && settings.length) {
@@ -142,18 +136,26 @@ export default function Options(props) {
       if (CheckMsgIsGroup) {
         setCheckMsgIsGroupType(CheckMsgIsGroup.value);
       }
+	  
+	  {/*PLW DESIGN SAUDAÇÃO*/}
+      const SendGreetingAccepted = settings.find((s) => s.key === "sendGreetingAccepted");
+      if (SendGreetingAccepted) {
+        setSendGreetingAccepted(SendGreetingAccepted.value);
+      }	 
+	  {/*PLW DESIGN SAUDAÇÃO*/}	 
+	  
+	  {/*TRANSFERIR TICKET*/}	
+	  const SettingsTransfTicket = settings.find((s) => s.key === "sendMsgTransfTicket");
+      if (SettingsTransfTicket) {
+        setSettingsTransfTicket(SettingsTransfTicket.value);
+      }
+	  {/*TRANSFERIR TICKET*/}	
+	  
       const chatbotType = settings.find((s) => s.key === "chatBotType");
       if (chatbotType) {
         setChatbotType(chatbotType.value);
       }
-      const SendGreetingAccepted = settings.find((s) => s.key === "sendGreetingAccepted");
-      if (SendGreetingAccepted) {
-        setSendGreetingAccepted(SendGreetingAccepted.value);
-      }
-      const SettingsTransfTicket = settings.find((s) => s.key === "sendMsgTransfTicket");
-      if (SettingsTransfTicket) {
-        setSettingsTransfTicket(SettingsTransfTicket.value);
-      }
+
       const ipixcType = settings.find((s) => s.key === "ipixc");
       if (ipixcType) {
         setIpIxcType(ipixcType.value);
@@ -183,28 +185,6 @@ export default function Options(props) {
       if (asaasType) {
         setAsaasType(asaasType.value);
       }
-      
-      const smtpauthType = settings.find((s) => s.key === "smtpauth");
-      if (smtpauthType) {
-        setUrlSmtpauthType(smtpauthType.value);
-      }
-
-      const usersmtpauthType = settings.find((s) => s.key === "usersmtpauth");
-      if (usersmtpauthType) {
-        setUserSmtpauthType(usersmtpauthType.value);
-      }
-
-      const clientsecretsmtpauthType = settings.find((s) => s.key === "clientsecretsmtpauth");
-      if (clientsecretsmtpauthType) {
-        setClientSecrectSmtpauthType(clientsecretsmtpauthType.value);
-      }
-    
-      const outsideMessageType = settings.find((s) => s.key === "outsidemessage");
-      if (outsideMessageType) {
-        setOutsideMessageType(outsideMessageType.value);
-      }
-    
-    
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
@@ -278,7 +258,34 @@ export default function Options(props) {
           scheduleTypeChanged(value);
         } */
   }
+  
+  {/*NOVO CÓDIGO*/}  
+  async function handleSendGreetingAccepted(value) {
+    setSendGreetingAccepted(value);
+    setLoadingSendGreetingAccepted(true);
+    await update({
+      key: "sendGreetingAccepted",
+      value,
+    });
+	toast.success("Operação atualizada com sucesso.");
+    setLoadingSendGreetingAccepted(false);
+  }  
+  
+  
+  {/*NOVO CÓDIGO*/}    
 
+  async function handleSettingsTransfTicket(value) {
+    setSettingsTransfTicket(value);
+    setLoadingSettingsTransfTicket(true);
+    await update({
+      key: "sendMsgTransfTicket",
+      value,
+    });
+
+    toast.success("Operação atualizada com sucesso.");
+    setLoadingSettingsTransfTicket(false);
+  } 
+ 
   async function handleChangeIPIxc(value) {
     setIpIxcType(value);
     setLoadingIpIxcType(true);
@@ -288,28 +295,6 @@ export default function Options(props) {
     });
     toast.success("Operação atualizada com sucesso.");
     setLoadingIpIxcType(false);
-  }
-
-  async function handleSendGreetingAccepted(value) {
-    setSendGreetingAccepted(value);
-    setLoadingSendGreetingAccepted(true);
-    await update({
-      key: "sendGreetingAccepted",
-      value,
-    });
-  toast.success("Operação atualizada com sucesso.");
-    setLoadingSendGreetingAccepted(false);
-  }
-
-  async function handleSettingsTransfTicket(value) {
-    setSettingsTransfTicket(value);
-    setLoadingSettingsTransfTicket(true);
-    await update({
-      key: "sendMsgTransfTicket",
-      value,
-    });
-  toast.success("Operação atualizada com sucesso.");
-    setLoadingSettingsTransfTicket(false);
   }
 
   async function handleChangeTokenIxc(value) {
@@ -334,17 +319,6 @@ export default function Options(props) {
     setLoadingIpMkauthType(false);
   }
 
-  async function handleOutsideMessageType(value) {
-    setOutsideMessageType(value);
-    setLoadingOutsideMessageType(true);
-    await update({
-      key: "outsidemessage",
-      value,
-    });
-    toast.success("Operação atualizada com sucesso.");
-    setLoadingOutsideMessageType(false);
-  }
-
   async function handleChangeClientIdMkauth(value) {
     setClientIdMkauthType(value);
     setLoadingClientIdMkauthType(true);
@@ -365,39 +339,6 @@ export default function Options(props) {
     });
     toast.success("Operação atualizada com sucesso.");
     setLoadingClientSecrectMkauthType(false);
-  }
-  
-  async function handleChangeUrlSmtpauth(value) {
-    setUrlSmtpauthType(value);
-    setLoadingUrlSmtpauthType(true);
-    await update({
-      key: "smtpauth",
-      value,
-    });
-    toast.success("Operação atualizada com sucesso.");
-    setLoadingUrlSmtpauthType(false);
-  }
-
-  async function handleChangeUserSmptauth(value) {
-    setUserSmtpauthType(value);
-    setLoadingSmptauthType(true);
-    await update({
-      key: "usersmtpauth",
-      value,
-    });
-    toast.success("Operação atualizada com sucesso.");
-    setLoadingSmptauthType(false);
-  }
-
-  async function handleChangeClientSecrectSmtpauth(value) {
-    setClientSecrectSmtpauthType(value);
-    setLoadingClientSecrectSmtpauthType(true);
-    await update({
-      key: "clientsecretsmtpauth",
-      value,
-    });
-    toast.success("Operação atualizada com sucesso.");
-    setLoadingClientSecrectSmtpauthType(false);
   }
 
   async function handleChangeAsaas(value) {
@@ -448,7 +389,6 @@ export default function Options(props) {
             >
               <MenuItem value={"disabled"}>Desabilitado</MenuItem>
               <MenuItem value={"queue"}>Gerenciamento Por Fila</MenuItem>
-              <MenuItem value={"company"}>Gerenciamento Por Empresa</MenuItem>
             </Select>
             <FormHelperText>
               {loadingScheduleType && "Atualizando..."}
@@ -508,13 +448,15 @@ export default function Options(props) {
               }}
             >
               <MenuItem value={"text"}>Texto</MenuItem>
+			 {/*<MenuItem value={"button"}>Botão</MenuItem>*/}
+             {/*<MenuItem value={"list"}>Lista</MenuItem>*/}
             </Select>
             <FormHelperText>
               {loadingChatbotType && "Atualizando..."}
             </FormHelperText>
           </FormControl>
         </Grid>
-
+		{/* ENVIAR SAUDAÇÃO AO ACEITAR O TICKET */}
         <Grid xs={12} sm={6} md={4} item>
           <FormControl className={classes.selectContainer}>
             <InputLabel id="sendGreetingAccepted-label">Enviar saudação ao aceitar o ticket</InputLabel>
@@ -533,29 +475,10 @@ export default function Options(props) {
             </FormHelperText>
           </FormControl>
         </Grid>
+		{/* ENVIAR SAUDAÇÃO AO ACEITAR O TICKET */}
 		
-		<Grid xs={12} sm={6} md={4} item>
-          <FormControl className={classes.selectContainer}>
-            <InputLabel id="outsidemessage-type-label">
-              Abrir Tickets Fora do Expediente?
-            </InputLabel>
-            <Select
-              labelId="outsidemessage-type-label"
-              value={outsideMessageType}
-              onChange={async (e) => {
-                handleOutsideMessageType(e.target.value);
-              }}
-            >
-              <MenuItem value={"disabled"}>Não</MenuItem>
-              <MenuItem value={"enabled"}>Sim</MenuItem>
-            </Select>
-            <FormHelperText>
-              {loadingOutsideMessageType && "Atualizando..."}
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-
-    <Grid xs={12} sm={6} md={4} item>
+		{/* ENVIAR MENSAGEM DE TRANSFERENCIA DE SETOR/ATENDENTE */}
+        <Grid xs={12} sm={6} md={4} item>
           <FormControl className={classes.selectContainer}>
             <InputLabel id="sendMsgTransfTicket-label">Enviar mensagem de transferencia de Fila/agente</InputLabel>
             <Select
@@ -573,6 +496,7 @@ export default function Options(props) {
             </FormHelperText>
           </FormControl>
         </Grid>
+		
       </Grid>
       <Grid spacing={3} container>
         <Tabs
@@ -593,7 +517,6 @@ export default function Options(props) {
         </Tabs>
 
       </Grid>
-
       {/*-----------------IXC-----------------*/}
       <Grid spacing={3} container
         style={{ marginBottom: 10 }}>
@@ -648,7 +571,6 @@ export default function Options(props) {
           </FormControl>
         </Grid>
       </Grid>
-
       {/*-----------------MK-AUTH-----------------*/}
       <Grid spacing={3} container
         style={{ marginBottom: 10 }}>
@@ -720,7 +642,6 @@ export default function Options(props) {
           </FormControl>
         </Grid>
       </Grid>
-
       {/*-----------------ASAAS-----------------*/}
       <Grid spacing={3} container
         style={{ marginBottom: 10 }}>
@@ -750,77 +671,6 @@ export default function Options(props) {
             </TextField>
             <FormHelperText>
               {loadingAsaasType && "Atualizando..."}
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-      </Grid>
-      {/*-----------------SMTP-AUTH-----------------*/}
-      <Grid spacing={3} container
-        style={{ marginBottom: 10 }}>
-        <Tabs
-          indicatorColor="primary"
-          textColor="primary"
-          scrollButtons="on"
-          variant="scrollable"
-          className={classes.tab}
-        >
-          <Tab label="SMPT" />
-
-        </Tabs>
-        <Grid xs={12} sm={12} md={4} item>
-          <FormControl className={classes.selectContainer}>
-            <TextField
-              id="smtpauth"
-              name="smtpauth"
-              margin="dense"
-              label="Url SMTP"
-              variant="outlined"
-              value={smtpauthType}
-              onChange={async (e) => {
-                handleChangeUrlSmtpauth(e.target.value);
-              }}
-            >
-            </TextField>
-            <FormHelperText>
-              {loadingUrlSmtpauthType && "Atualizando..."}
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-        <Grid xs={12} sm={12} md={4} item>
-          <FormControl className={classes.selectContainer}>
-            <TextField
-              id="usersmtpauth"
-              name="usersmtpauth"
-              margin="dense"
-              label="User Smpt"
-              variant="outlined"
-              value={usersmtpauthType}
-              onChange={async (e) => {
-                handleChangeUserSmptauth(e.target.value);
-              }}
-            >
-            </TextField>
-            <FormHelperText>
-              {loadingSmtpauthType && "Atualizando..."}
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-        <Grid xs={12} sm={12} md={4} item>
-          <FormControl className={classes.selectContainer}>
-            <TextField
-              id="clientsecretsmtpauth"
-              name="clientsecretsmtpauth"
-              margin="dense"
-              label="PassWord Smpt"
-              variant="outlined"
-              value={clientsecretsmtpauthType}
-              onChange={async (e) => {
-                handleChangeClientSecrectSmtpauth(e.target.value);
-              }}
-            >
-            </TextField>
-            <FormHelperText>
-              {loadingClientSecrectSmtpauthType && "Atualizando..."}
             </FormHelperText>
           </FormControl>
         </Grid>

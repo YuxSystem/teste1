@@ -7,8 +7,8 @@ import Setting from "../../models/Setting";
 interface CompanyData {
   name: string;
   phone?: string;
-  password?: string;
   email?: string;
+  password?: string;
   status?: boolean;
   planId?: number;
   campaignsEnabled?: boolean;
@@ -66,20 +66,14 @@ const CreateCompanyService = async (
     dueDate,
     recurrence
   });
-  const [user, created] = await User.findOrCreate({
-    where: { name, email },
-    defaults: {
-      name: name,
-      email: email,
-      password: password || "mudar123",
-      profile: "admin",
-      companyId: company.id
-    }
-  });
 
-  if (!created) {
-    await user.update({ companyId: company.id });
-  }
+  const user = await User.create({
+    name: company.name,
+    email: company.email,
+    password: companyData.password,
+    profile: "admin",
+    companyId: company.id
+  });
 
   await Setting.findOrCreate({
     where: {
@@ -197,9 +191,10 @@ const CreateCompanyService = async (
     },
   });
 
-  // Enviar mensagem ao aceitar ticket
+
+ // Enviar mensagem ao aceitar ticket
     await Setting.findOrCreate({
-  where:{
+	where:{
       companyId: company.id,
       key: "sendGreetingAccepted",
     },
@@ -209,9 +204,10 @@ const CreateCompanyService = async (
       value: "disabled"
     },
   });
-
-  await Setting.findOrCreate({
-  where:{
+  
+ // Enviar mensagem de transferencia
+    await Setting.findOrCreate({
+	where:{
       companyId: company.id,
       key: "sendMsgTransfTicket",
     },
@@ -245,6 +241,43 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "chatBotType",
       value: "text"
+    },
+
+  });
+
+  await Setting.findOrCreate({
+    where: {
+      companyId: company.id,
+      key: "tokensgp"
+    },
+    defaults: {
+      companyId: company.id,
+      key: "tokensgp",
+      value: ""
+    },
+  });
+
+  await Setting.findOrCreate({
+    where: {
+      companyId: company.id,
+      key: "ipsgp"
+    },
+    defaults: {
+      companyId: company.id,
+      key: "ipsgp",
+      value: ""
+    },
+  });
+
+  await Setting.findOrCreate({
+    where: {
+      companyId: company.id,
+      key: "appsgp"
+    },
+    defaults: {
+      companyId: company.id,
+      key: "appsgp",
+      value: ""
     },
   });
 

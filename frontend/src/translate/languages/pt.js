@@ -2,21 +2,19 @@ const messages = {
   pt: {
     translations: {
       signup: {
-        title: "Crie seu cadastro abaixo!",
+        title: "Cadastre-se",
         toasts: {
           success: "Usuário criado com sucesso! Faça seu login!!!.",
           fail: "Erro ao criar usuário. Verifique os dados informados.",
         },
         form: {
-          company: "Empresa",
           name: "Nome",
           email: "Email",
           password: "Senha",
-          phone: "Telefone",          
         },
         buttons: {
           submit: "Cadastrar",
-          login: "Já tem uma conta? Acessar Agora!",
+          login: "Já tem uma conta? Entre!",
         },
       },
       login: {
@@ -26,8 +24,8 @@ const messages = {
           password: "Senha",
         },
         buttons: {
-          submit: "Acessar",
-          register: "Não tem uma conta? Criar Conta!",
+          submit: "Entrar",
+          register: "Não tem um conta? Cadastre-se!",
         },
       },
       companies: {
@@ -55,18 +53,10 @@ const messages = {
       },
       connections: {
         title: "Conexões",
-        waitConnection:"Aguarde... Suas conexões serão reiniciadas!",
-        newConnection:"Nova Conexão",
-        restartConnections:"Reiniciar Conexões",
-        callSupport:"Chamar Suporte",
-        newConnection:"Nova Conexão",
         toasts: {
-          deleted: "Conexão excluída com sucesso!",
-          closedimported:"Estamos fechando os tickets importados, por favor aguarde uns instantes"
+          deleted: "Conexão com o WhatsApp excluída com sucesso!",
         },
         confirmationModal: {
-          closedImportedTitle:"Fechar tickets importados",
-          closedImportedMessage:"Se você confirmar todos os tickets importados serão fechados",
           deleteTitle: "Deletar",
           deleteMessage: "Você tem certeza? Essa ação não pode ser revertida.",
           disconnectTitle: "Desconectar",
@@ -74,23 +64,12 @@ const messages = {
             "Tem certeza? Você precisará ler o QR Code novamente.",
         },
         buttons: {
-          add: "Adicionar Conexão",
+          add: "Adicionar WhatsApp",
           disconnect: "desconectar",
           tryAgain: "Tentar novamente",
           qrcode: "QR CODE",
           newQr: "Novo QR CODE",
-          closedImported:"Fechar todos os tickets Importados",
-          preparing:"Preparando mensagens para importação",
-          importing:"Importando Mensagens do WhatsApp",
-          newQr: "Novo QR CODE",
-          processed:"Processado",
-          in:"de",
           connecting: "Conectando",
-        },
-        typography:{
-          processed:"Processado",
-          in:"de",
-          date:"Data da mensagem"
         },
         toolTips: {
           disconnected: {
@@ -119,7 +98,6 @@ const messages = {
           default: "Padrão",
           actions: "Ações",
           session: "Sessão",
-          number: "Número do Whatsapp"
         },
       },
       whatsappModal: {
@@ -130,11 +108,11 @@ const messages = {
         form: {
           name: "Nome",
           default: "Padrão",
-          queueRedirection: "Redirecionamento de Fila",
-          queueRedirectionDesc:
-            "Selecione uma fila e tempo para os contatos que não possuem fila serem redirecionados",
-          timeSendQueue: "Tempo em minutos",
           sendIdQueue: "Fila",
+          timeSendQueue: "Redirecionar para fila em X minutos",
+          queueRedirection:"Redirecionamento de Fila",
+          queueRedirectionDesc:"Selecione uma fila para os contatos que não possuem fila serem redirecionados",
+
         },
         buttons: {
           okAdd: "Adicionar",
@@ -183,7 +161,6 @@ const messages = {
           email: "Email",
           extraName: "Nome do campo",
           extraValue: "Valor",
-          chatBotContact: "Desabilitar chatbot para esse contato",
         },
         buttons: {
           addExtraInfo: "Adicionar informação",
@@ -223,13 +200,6 @@ const messages = {
           email: "Email",
           password: "Senha",
           profile: "Perfil",
-          allTicketEnable: "Habilitado",
-          allTicketDisable: "Desabilitado",
-          allTicket: "Visualizar chamados sem fila",
-          allHistoric: "Ver conversas de outras filas",
-          allHistoricEnabled: "Habilitado",
-          allHistoricDisabled: "Desabilitado",
-          allUserChat: "Ver conversas de outros usuários",
         },
         buttons: {
           okAdd: "Adicionar",
@@ -297,9 +267,9 @@ const messages = {
           message: "Mensagem de",
         },
         tabs: {
-          open: { title: "Abertos" },
+          open: { title: "Abertas" },
           closed: { title: "Resolvidos" },
-          search: { title: "Buscar" },
+          search: { title: "Busca" },
         },
         search: {
           placeholder: "Buscar atendimento e mensagens",
@@ -322,14 +292,13 @@ const messages = {
       ticketsList: {
         pendingHeader: "Aguardando",
         assignedHeader: "Atendendo",
-        groupingHeader: "Grupos",
         noTicketsTitle: "Nada aqui!",
         noTicketsMessage:
           "Nenhum atendimento encontrado com esse status ou termo pesquisado",
         buttons: {
           accept: "Aceitar",
           closed: "Finalizar",
-          reopen: "Reabrir",
+          reopen: "Reabrir"
         },
       },
       newTicketModal: {
@@ -349,13 +318,11 @@ const messages = {
           quickMessages: "Respostas Rápidas",
           contacts: "Contatos",
           queues: "Filas & Chatbot",
-          kanban: "Kanban",
-          todolist: "Tarefas",
           tags: "Tags",
           administration: "Administração",
           users: "Usuários",
           settings: "Configurações",
-          helps: "Tutoriais",
+          helps: "Ajuda",
           messagesAPI: "API",
           schedules: "Agendamentos",
           campaigns: "Campanhas",
@@ -499,7 +466,6 @@ const messages = {
             scheduledAt: "Agendamento",
             confirmation: "Confirmação",
             contactList: "Lista de Contato",
-            tagList: "Tags",
           },
           buttons: {
             add: "Adicionar",
@@ -611,7 +577,7 @@ const messages = {
         },
       },
       helps: {
-        title: "Tutoriais de Apoio",
+        title: "Central de Ajuda",
       },
       schedules: {
         title: "Agendamentos",
@@ -690,21 +656,6 @@ const messages = {
         },
         extraInfo: "Outras informações",
       },
-      messageVariablesPicker: {
-        label: "Variavéis disponíveis",
-        vars: {
-          contactFirstName: "Primeiro Nome",
-          contactName: "Nome",
-          user: "Atendente",
-          greeting: "Saudação",
-          protocolNumber: "Protocolo",
-          date: "Data",
-          hour: "Hora",
-          ticket_id: "Nº do Chamado",
-          queue: "Setor",
-          connection: "Conexão"
-        }
-      },
       ticketOptionsMenu: {
         schedule: "Agendamento",
         delete: "Deletar",
@@ -739,59 +690,6 @@ const messages = {
           message: "Esta ação não pode ser revertida.",
         },
       },
-      quickemessage: {
-        toasts: {
-          success: "Atalho adicionado com sucesso!",
-          deleted: "Atalho removido com sucesso!",
-        },
-        title: "Respostas Rápidas",
-        buttons: {
-          add: "Nova Resposta",
-        },
-        dialog: {
-          add: "Adicionar",
-          edit: "Editar",
-          form: {
-            shortcode: "Atalho",
-            message: "Mensagem",
-            geral: "Global",
-          },
-          buttons: {
-            cancel: "Cancelar",
-            edit: "Salvar",
-            attach: "Anexar",
-            add: "Salvar",
-          },
-        },
-        confirmationModal: {
-          deleteTitle: "Exclusão",
-          deleteMessage: "Esta ação é irreversível! Deseja prosseguir?",  
-        },
-      },
-      quickemessages: {
-        toasts: {
-          success: "Atalho adicionado com sucesso!",
-          deleted: "Atalho removido com sucesso!",
-        },
-        title: "Respostas Rápidas",
-        table: {
-          shortcode: "Atalho",
-          mediaName: "Arquivo",
-          status: "Global",
-          actions: "Ação",
-        },
-        searchPlaceholder: "Procurar",
-        buttons: {
-          add: "Adicionar",
-          attach: "Anexar Arquivo",
-          cancel: "Cancelar",
-          edit: "Salvar",
-        },
-        confirmationModal: {
-          deleteTitle: "Exclusão",
-          deleteMessage: "Esta ação é irreversível! Deseja prosseguir?",  
-        },
-      },
       backendErrors: {
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
         ERR_NO_DEF_WAPP_FOUND:
@@ -813,7 +711,6 @@ const messages = {
         ERR_USER_CREATION_DISABLED:
           "A criação do usuário foi desabilitada pelo administrador.",
         ERR_NO_PERMISSION: "Você não tem permissão para acessar este recurso.",
-        ERR_NO_ACHEI: "Tá aqui o erro.",
         ERR_DUPLICATED_CONTACT: "Já existe um contato com este número.",
         ERR_NO_SETTING_FOUND: "Nenhuma configuração encontrada com este ID.",
         ERR_NO_CONTACT_FOUND: "Nenhum contato encontrado com este ID.",

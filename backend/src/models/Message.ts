@@ -19,7 +19,7 @@ import Queue from "./Queue";
 class Message extends Model<Message> {
   @PrimaryKey
   @Column
-  id: number;
+  id: string;
 
   @Column(DataType.STRING)
   remoteJid: string;
@@ -42,25 +42,16 @@ class Message extends Model<Message> {
   @Column
   fromMe: boolean;
 
-  @Column({ defaultValue: "whatsapp" })
-  channel: string;
-
   @Column(DataType.TEXT)
   body: string;
 
-  @Column
-  wid: string;
-  
   @Column(DataType.STRING)
   get mediaUrl(): string | null {
     if (this.getDataValue("mediaUrl")) {
-      
       return `${process.env.BACKEND_URL}${process.env.PROXY_PORT ?`:${process.env.PROXY_PORT}`:""}/public/${this.getDataValue("mediaUrl")}`;
-
     }
     return null;
   }
-
 
   @Column
   mediaType: string;

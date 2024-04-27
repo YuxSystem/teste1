@@ -33,10 +33,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    background: theme.palette.fundoBackground,
-  },
-  icon: {
-    color: theme.palette.corIconespaginas
   },
   customTableCell: {
     display: "flex",
@@ -183,7 +179,7 @@ const Queues = () => {
         queueId={selectedQueue?.id}
       />
       <MainHeader>
-        <Title>{i18n.t("queues.title")} ({queues.length})</Title>
+        <Title>{i18n.t("queues.title")}</Title>
         <MainHeaderButtonsWrapper>
           <Button
             variant="contained"
@@ -241,14 +237,14 @@ const Queues = () => {
                     </div>
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton className={classes.icon}
+                    <IconButton
                       size="small"
                       onClick={() => handleEditQueue(queue)}
                     >
                       <Edit />
                     </IconButton>
 
-                    <IconButton className={classes.icon}
+                    <IconButton
                       size="small"
                       onClick={() => {
                         setSelectedQueue(queue);

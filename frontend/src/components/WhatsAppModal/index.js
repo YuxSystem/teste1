@@ -17,17 +17,16 @@ import {
   Switch,
   FormControlLabel,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 import toastError from "../../errors/toastError";
 import QueueSelect from "../QueueSelect";
-import { isNil } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,13 +73,30 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
     isDefault: false,
     token: "",
     provider: "beta",
-    timeSendQueue: '0',
+    timeSendQueue: 0,
     sendIdQueue: 0,
-
   };
   const [whatsApp, setWhatsApp] = useState(initialState);
   const [selectedQueueIds, setSelectedQueueIds] = useState([]);
   const [queues, setQueues] = useState([]);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      if (!whatsAppId) return;
+
+      try {
+        const { data } = await api.get(`whatsapp/${whatsAppId}?session=0`);
+        console.log(data)
+        setWhatsApp(data);
+
+        const whatsQueueIds = data.queues?.map((queue) => queue.id);
+        setSelectedQueueIds(whatsQueueIds);
+      } catch (err) {
+        toastError(err);
+      }
+    };
+    fetchSession();
+  }, [whatsAppId]);
 
   useEffect(() => {
     (async () => {
@@ -93,31 +109,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
     })();
   }, []);
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      if (!whatsAppId) return;
-
-      try {
-        const { data } = await api.get(`whatsapp/${whatsAppId}?session=0`);
-        setWhatsApp(data);
-
-        const whatsQueueIds = data.queues?.map((queue) => queue.id);
-        setSelectedQueueIds(whatsQueueIds);
-      } catch (err) {
-        toastError(err);
-      }
-    };
-    fetchSession();
-  }, [whatsAppId]);
-
   const handleSaveWhatsApp = async (values) => {
-    if (values.timeSendQueue === '') values.timeSendQueue = '0'
-
-    if ((values.sendIdQueue === 0 || values.sendIdQueue === '' || isNil(values.sendIdQueue)) && (values.timeSendQueue !== 0 && values.timeSendQueue !== '0')) {
-      toastError(i18n.t("whatsappModal.errorSendQueue"));
-      return;
-    }
-
     const whatsappData = { ...values, queueIds: selectedQueueIds };
     delete whatsappData["queues"];
     delete whatsappData["session"];
@@ -145,7 +137,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
         scroll="paper"
       >
@@ -308,7 +300,6 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                           as={Select}
                           name="sendIdQueue"
                           id="sendIdQueue"
-                          value={values.sendIdQueue || '0'}
                           label={i18n.t("whatsappModal.form.sendIdQueue")}
                           placeholder={i18n.t("whatsappModal.form.sendIdQueue")}
                           labelId="sendIdQueue-selection-label"

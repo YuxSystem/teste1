@@ -14,6 +14,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { useDate } from "../../hooks/useDate";
 import api from "../../services/api";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -25,14 +26,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 0,
     height: "100%",
     borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-    // backgroundColor: theme.mode === 'light' ? "#f2f2f2" : "#7f7f7f",
   },
   messageList: {
     position: "relative",
     overflowY: "auto",
     height: "100%",
     ...theme.scrollbarStyles,
-    backgroundColor: theme.palette.listaInterno,
+    backgroundColor: theme.palette.chatlist, //DARK MODE PLW DESIGN//
   },
   inputArea: {
     position: "relative",
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     padding: "20px",
-    backgroundColor: theme.palette.fundoBackground,
   },
   buttonSend: {
     margin: theme.spacing(1),
@@ -49,8 +48,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 10px 5px",
     margin: "10px",
     position: "relative",
-    backgroundColor: "#ffffff",
-    color: "#303030",
+    backgroundColor: "blue",
     maxWidth: 300,
     borderRadius: 10,
     borderBottomLeftRadius: 0,
@@ -60,16 +58,12 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 10px 5px",
     margin: "10px 10px 10px auto",
     position: "relative",
-    backgroundColor: "#dcf8c6",
-    color: "#303030",
+    backgroundColor: "green", //DARK MODE PLW DESIGN//
     textAlign: "right",
     maxWidth: 300,
     borderRadius: 10,
     borderBottomRightRadius: 0,
     border: "1px solid rgba(0, 0, 0, 0.12)",
-  },
-  icon: {
-    color: theme.palette.corIconespaginas
   },
 }));
 
@@ -169,14 +163,14 @@ export default function ChatMessages({
             className={classes.input}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton className={classes.icon}
+                <IconButton
                   onClick={() => {
                     if (contentMessage.trim() !== "") {
                       handleSendMessage(contentMessage);
                       setContentMessage("");
                     }
                   }}
-                  className={classes.icon}
+                  className={classes.buttonSend}
                 >
                   <SendIcon />
                 </IconButton>

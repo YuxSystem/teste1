@@ -1,13 +1,9 @@
 import AppError from "../../errors/AppError";
 import CheckContactOpenTickets from "../../helpers/CheckContactOpenTickets";
 import GetDefaultWhatsApp from "../../helpers/GetDefaultWhatsApp";
-import GetDefaultWhatsAppByUser from "../../helpers/GetDefaultWhatsAppByUser";
-
 import Ticket from "../../models/Ticket";
 import ShowContactService from "../ContactServices/ShowContactService";
 import { getIO } from "../../libs/socket";
-import ShowWhatsAppService from "../WhatsappService/ShowWhatsAppService";
-import ShowTicketService from "./ShowTicketService";
 
 interface Request {
   contactId: number;
@@ -15,7 +11,6 @@ interface Request {
   userId: number;
   companyId: number;
   queueId?: number;
-  whatsappId?: string;
 }
 
 const CreateTicketService = async ({
@@ -23,22 +18,9 @@ const CreateTicketService = async ({
   status,
   userId,
   queueId,
-  companyId,
-  whatsappId
+  companyId
 }: Request): Promise<Ticket> => {
-  let whatsapp;
-
-  if (whatsappId !== undefined && whatsappId !== null && whatsappId !== "") {
-    whatsapp = await ShowWhatsAppService(whatsappId, companyId)
-  }
-
-  let defaultWhatsapp = await GetDefaultWhatsAppByUser(userId);
-
-  if (whatsapp) {
-    defaultWhatsapp = whatsapp;
-  }
-  if (!defaultWhatsapp)
-    defaultWhatsapp = await GetDefaultWhatsApp(companyId);
+  const defaultWhatsapp = await GetDefaultWhatsApp(companyId);
 
   await CheckContactOpenTickets(contactId);
 
@@ -63,19 +45,8 @@ const CreateTicketService = async ({
     { companyId, queueId, userId, whatsappId: defaultWhatsapp.id, status: "open" },
     { where: { id } }
   );
-  // let ticket = await Ticket.create({
-  //   contactId,
-  //   companyId,
-  //   whatsappId: defaultWhatsapp.id,
-  //   isGroup,
-  //   userId,
-  //   chatbot: false,
-  //   queueId,
-  //   status: isGroup ? "group" : "open",
-  // });
-  const ticket = await Ticket.findByPk(id, { include: ["contact", "queue"] });
 
-  // ticket = await ShowTicketService(ticket.id, companyId);
+  const ticket = await Ticket.findByPk(id, { include: ["contact", "queue"] });
 
   if (!ticket) {
     throw new AppError("ERR_CREATING_TICKET");
@@ -83,7 +54,7 @@ const CreateTicketService = async ({
 
   const io = getIO();
 
-  io.to(ticket.id.toString()).emit(`company-${ticket.companyId}-ticket`, {
+  io.to(ticket.id.toString()).emit("ticket", {
     action: "update",
     ticket
   });

@@ -14,14 +14,11 @@ const ListService = async ({
 }: Request): Promise<Tag[]> => {
   let whereCondition = {};
 
-  console.log(searchParam);
-
   if (searchParam) {
     whereCondition = {
       [Op.or]: [
         { name: { [Op.like]: `%${searchParam}%` } },
-        { color: { [Op.like]: `%${searchParam}%` } },
-        { kanban: { [Op.like]: `%${searchParam}%` } }
+        { color: { [Op.like]: `%${searchParam}%` } }
       ]
     };
   }

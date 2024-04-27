@@ -37,7 +37,7 @@ const App = () => {
                 },
                 "&::-webkit-scrollbar-thumb": {
                     boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
-                    backgroundColor: "#e8e8e8",
+                    backgroundColor: "#03bd9dF",
                 },
             },
             scrollbarStylesSoft: {
@@ -45,50 +45,37 @@ const App = () => {
                     width: "8px",
                 },
                 "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: mode === "light" ? "#FFFFFF" : "#0F1B20",
+                    backgroundColor: mode === "light" ? "#F3F3F3" : "#333333",
                 },
             },
             palette: {
                 type: mode,
-                primary: { main: mode === "light" ? "#34DD3B" : "#34DD3B" },
-                secondary: { main: mode === "light" ? "#34DD3B" : "#34DD3B" },
-                textPrimary: mode === "light" ? "#0F1B20" : "#FFFFFF",
-                background: {
-                    default: mode === "light" ? "#FFFFFF" : "#0F1B20",
-                    paper: mode === "light" ? "#FFFFFF" : "#1C2E36",
-                },
-                borderPrimary: mode === "light" ? "#34DD3B" : "#FFFFFF",
-                dark: { main: mode === "light" ? "#1C2E36" : "#FFFFFF" },
-                light: { main: mode === "light" ? "#FFFFFF" : "#1C2E36" },
-                tabHeaderBackground: mode === "light" ? "#FFFFFF" : "#1C2E36", //Menu Atendimentos (Abertas, Grupos...)
-                optionsBackground: mode === "light" ? "#F1F5F5" : "#0F1B20", //Aba Atendimentos (Novos, Todos, Filas)
-                options: mode === "light" ? "#FFFFFF" : "#1C2E36", //Configurações (Abas: Integrações IXC ASAAS...)
-                fontecor: mode === "light" ? "#0F1B20" : "#FFFFFF",
-                fancyBackground: mode === "light" ? "#F1F5F5" : "#0F1B20", //Cor Fundo Principal Escura
-                bordabox: mode === "light" ? "#F1F5F5" : "#0F1B20", //Borda acima de onde digita a mensagem
-                newmessagebox: mode === "light" ? "#F1F5F5" : "#0F1B20", //Em torno da Caixa de onde digita a mensagem
-                inputdigita: mode === "light" ? "#FFFFFF" : "#1C2E36", //Caixa de Texto Atendimento onde digita a mensagem
-                contactdrawer: mode === "light" ? "#FFFFFF" : "#1C2E36", // ONDE???????????
-                announcements: mode === "light" ? "#FFFFFF" : "#1C2E36", // ONDE???????????
-                login: mode === "light" ? "#FFFFF" : "#1C1C1C",
-                announcementspopover: mode === "light" ? "#FFFFFF" : "#1C2E36", // ONDE???????????
-                chatlist: mode === "light" ? "#1C2E36" : "#1C2E36", //
-                boxlist: mode === "light" ? "#E7ECEE" : "#2E4C59",
-                boxchatlist: mode === "light" ? "#ededed" : "#1C2E36", // ONDE???????????
+                primary: { main: "#03bd9d" },
+                textPrimary: mode === "light" ? "#03bd9d" : "#FFFFFF",
+                borderPrimary: mode === "light" ? "#03bd9d" : "#FFFFFF",
+                dark: { main: mode === "light" ? "#333333" : "#F3F3F3" },
+                light: { main: mode === "light" ? "#F3F3F3" : "#333333" },
+                tabHeaderBackground: mode === "light" ? "#EEE" : "#333",
+                optionsBackground: mode === "light" ? "#fafafa" : "#333",
+				options: mode === "light" ? "#fafafa" : "#666",
+				fontecor: mode === "light" ? "#03bd9d" : "#fff",
+                fancyBackground: mode === "light" ? "#fafafa" : "#333",
+				bordabox: mode === "light" ? "#eee" : "#333",
+				newmessagebox: mode === "light" ? "#eee" : "#333",
+				inputdigita: mode === "light" ? "#fff" : "#333",
+				contactdrawer: mode === "light" ? "#fff" : "#333",
+				announcements: mode === "light" ? "#ededed" : "#333",
+				login: mode === "light" ? "#fff" : "#1C1C1C",
+				announcementspopover: mode === "light" ? "#fff" : "#333",
+				chatlist: mode === "light" ? "#eee" : "#333",
+				boxlist: mode === "light" ? "#ededed" : "#333",
+				boxchatlist: mode === "light" ? "#ededed" : "#333",
                 total: mode === "light" ? "#fff" : "#222",
-                messageIcons: mode === "light" ? "ff0378" : "#F3F3F3",
-                inputBackground: mode === "light" ? "#FFFFFF" : "#1C2E36", // ONDE???????????
-                barraSuperior: mode === "light" ? "linear-gradient(to right, #0F1B20, #1C2E36, #2E4C59)" : "linear-gradient(to right, #0F1B20, #1C2E36, #2E4C59)", //Barra Horizontal
-                boxticket: mode === "light" ? "#1C2E36" : "#1C2E36", //Cor de fundo da imagem quando os tickets não estão selecionados
-                listaInterno: mode === "light" ? "#E7ECEE" : "#2E4C59",
-                campaigntab: mode === "light" ? "#FFFFFF" : "#1C2E36",
-                fundoBackground: mode === "light" ? "#FFFFFF" : "#1C2E36", //Cor Fundo Interna Mediana
-                corIconespaginas: mode === "light" ? "#34DD3B" : "#34DD3B",
-                corIconesbarra: mode === "light" ? "#1C2E36" : "#34DD3B",
-                corTextobarra: mode === "light" ? "#0F1B20" : "#FFFFFF",
-                corTextosuporte: mode === "light" ? "#0F1B20" : "#FFFFFF",
-                fundologoLateral: mode === "light" ? "linear-gradient(to right, #0F1B20, #0F1B20, #0F1B20)" : "linear-gradient(to right, #0F1B20, #0F1B20, #0F1B20)", //Fundo Logo Superior
-                barraLateral: mode === "light" ? "linear-gradient(to right, #F1F5F5, #FFFFFF, #F1F5F5)" : "linear-gradient(to right, #0F1B20, #0F1B20, #0F1B20)", //Barra Vertical
+                messageIcons: mode === "light" ? "grey" : "#F3F3F3",
+                inputBackground: mode === "light" ? "#FFFFFF" : "#333",
+                barraSuperior: mode === "light" ? "linear-gradient(to right, #03bd9d, #03bd9d, #03bd9d)" : "#666",
+				boxticket: mode === "light" ? "#EEE" : "#333",
+				campaigntab: mode === "light" ? "#ededed" : "#333",
             },
             mode,
         },
@@ -108,6 +95,7 @@ const App = () => {
     useEffect(() => {
         window.localStorage.setItem("preferredTheme", mode);
     }, [mode]);
+
 
 
     return (

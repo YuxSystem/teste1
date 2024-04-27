@@ -20,6 +20,7 @@ import ContactLists from "../pages/ContactLists/";
 import ContactListItems from "../pages/ContactListItems/";
 // import Companies from "../pages/Companies/";
 import QuickMessages from "../pages/QuickMessages/";
+import Kanban from "../pages/Kanban";
 import { AuthProvider } from "../context/Auth/AuthContext";
 import { TicketsContextProvider } from "../context/Tickets/TicketsContext";
 import { WhatsAppsProvider } from "../context/WhatsApp/WhatsAppsContext";
@@ -30,14 +31,8 @@ import CampaignsConfig from "../pages/CampaignsConfig";
 import CampaignReport from "../pages/CampaignReport";
 import Annoucements from "../pages/Annoucements";
 import Chat from "../pages/Chat";
-import Subscription from "../pages/Subscription/";
 import ToDoList from "../pages/ToDoList/";
-import Kanban from "../pages/Kanban"
-import ForgetPassword from "../pages/ForgetPassWord/";
-import Email from "../pages/Email/";
-import EmailLis from "../pages/EmailLis/";
-import EmailScheduler from "../pages/EmailScheduler/";
-import ChatGPT from "../pages/ChatGPT/";
+import Subscription from "../pages/Subscription/";
 
 
 const Routes = () => {
@@ -57,7 +52,6 @@ const Routes = () => {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
-            <Route exact path="/forgetpsw"    component={ForgetPassword} />
             {/* <Route exact path="/create-company" component={Companies} /> */}
             <WhatsAppsProvider>
               <LoggedInLayout>
@@ -85,7 +79,7 @@ const Routes = () => {
                   path="/todolist"
                   component={ToDoList}
                   isPrivate
-                />
+                  />
                 <Route
                   exact
                   path="/schedules"
@@ -96,10 +90,6 @@ const Routes = () => {
                 <Route exact path="/contacts" component={Contacts} isPrivate />
                 <Route exact path="/helps" component={Helps} isPrivate />
                 <Route exact path="/users" component={Users} isPrivate />
-                <Route exact path="/Email" component={Email} isPrivate />
-                <Route exact path="/EmailLis" component={EmailLis} isPrivate />
-                <Route exact path="/EmailScheduler" component={EmailScheduler} isPrivate />
-                <Route exact path="/ChatGPT" component={ChatGPT} isPrivate />
                 <Route
                   exact
                   path="/messages-api"
@@ -110,6 +100,12 @@ const Routes = () => {
                   exact
                   path="/settings"
                   component={SettingsCustom}
+                  isPrivate
+                />
+				        <Route 
+                  exact
+                  path="/kanban"
+                  component={Kanban}
                   isPrivate
                 />
                 <Route
@@ -131,15 +127,6 @@ const Routes = () => {
                   component={Subscription}
                   isPrivate
                 />
-                
-                <Route
-                  exact
-                  path="/Kanban"
-                  component={Kanban}
-                  isPrivate
-                />
-                
-                
                 <Route exact path="/chats/:id?" component={Chat} isPrivate />
                 {showCampaigns && (
                   <>
@@ -173,7 +160,6 @@ const Routes = () => {
                       component={CampaignsConfig}
                       isPrivate
                     />
-                    
                   </>
                 )}
               </LoggedInLayout>

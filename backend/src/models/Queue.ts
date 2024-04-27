@@ -47,14 +47,6 @@ class Queue extends Model<Queue> {
   @Default("")
   @Column
   outOfHoursMessage: string;
-  
-  @AllowNull(false)
-  @Column
-  ativarRoteador: boolean;
-
-  @AllowNull(false)
-  @Column
-  tempoRoteador: number;
 
   @Column({
     type: DataType.JSONB

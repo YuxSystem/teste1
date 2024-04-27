@@ -18,27 +18,14 @@ import ButtonWithSpinner from "../ButtonWithSpinner";
 import ContactModal from "../ContactModal";
 import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import { Grid, ListItemText, MenuItem, Select, Typography, makeStyles } from "@material-ui/core";
+import { Grid, ListItemText, MenuItem, Select } from "@material-ui/core";
 import { toast } from "react-toastify";
-import { Facebook, Instagram, WhatsApp } from "@material-ui/icons";
-
-const useStyles = makeStyles((theme) => ({
-	online: {
-		fontSize: 11,
-		color: "#25d366"
-	},
-	offline: {
-		fontSize: 11,
-		color: "#e1306c"
-	}
-}));
 
 const filter = createFilterOptions({
 	trim: true,
 });
 
 const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
-	const classes = useStyles();
 
 	const [options, setOptions] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -48,9 +35,6 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 	const [newContact, setNewContact] = useState({});
 	const [contactModalOpen, setContactModalOpen] = useState(false);
 	const { user } = useContext(AuthContext);
-	const [selectedWhatsapp, setSelectedWhatsapp] = useState("");
-	const [whatsapps, setWhatsapps] = useState([]);
-	const { companyId, whatsappId } = user;
 
 	useEffect(() => {
 		if (initialContact?.id !== undefined) {
@@ -58,28 +42,6 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 			setSelectedContact(initialContact);
 		}
 	}, [initialContact]);
-
-	useEffect(() => {
-		setLoading(true);
-		const delayDebounceFn = setTimeout(() => {
-			const fetchContacts = async () => {
-				api
-					.get(`/whatsapp`, { params: { companyId, session: 0 } })
-					.then(({ data }) => setWhatsapps(data));
-			};
-
-			if (whatsappId !== null && whatsappId !== undefined) {
-				setSelectedWhatsapp(whatsappId)
-			}
-
-			if (user.queues.length === 1) {
-				setSelectedQueue(user.queues[0].id)
-			}
-			fetchContacts();
-			setLoading(false);
-		}, 500);
-		return () => clearTimeout(delayDebounceFn);
-	}, [])
 
 	useEffect(() => {
 		if (!modalOpen || searchParam.length < 3) {
@@ -121,12 +83,9 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		setLoading(true);
 		try {
 			const queueId = selectedQueue !== "" ? selectedQueue : null;
-			const whatsappId = selectedWhatsapp !== "" ? selectedWhatsapp : null;
-
 			const { data: ticket } = await api.post("/tickets", {
 				contactId: contactId,
 				queueId,
-				whatsappId,
 				userId: user.id,
 				status: "open",
 			});
@@ -231,19 +190,6 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 		return null;
 	}
 
-	const IconChannel = (channel) => {
-		switch (channel) {
-		  case "facebook":
-			return <Facebook style={{ color: "#3b5998", verticalAlign: "middle" }} />;
-		  case "instagram":
-			return <Instagram style={{ color: "#e1306c", verticalAlign: "middle" }} />;
-		  case "whatsapp":
-			return <WhatsApp style={{ color: "#25d366", verticalAlign: "middle" }} />
-		  default:
-			return "error";
-		}
-	  };
-
 	return (
 		<>
 			<ContactModal
@@ -291,53 +237,6 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
 									user.queues.map((queue, key) => (
 										<MenuItem dense key={key} value={queue.id}>
 											<ListItemText primary={queue.name} />
-										</MenuItem>
-									))}
-							</Select>
-						</Grid>
-						{/* CONEXAO */}
-						<Grid xs={12} item>
-							<Select
-								required
-								fullWidth
-								displayEmpty
-								variant="outlined"
-								value={selectedWhatsapp}
-								onChange={(e) => {
-									setSelectedWhatsapp(e.target.value)
-								}}
-								MenuProps={{
-									anchorOrigin: {
-										vertical: "bottom",
-										horizontal: "left",
-									},
-									transformOrigin: {
-										vertical: "top",
-										horizontal: "left",
-									},
-									getContentAnchorEl: null,
-								}}
-								renderValue={() => {
-									if (selectedWhatsapp === "") {
-										return "Selecione uma Conexão"
-									}
-									const whatsapp = whatsapps.find(w => w.id === selectedWhatsapp)
-									return whatsapp?.name
-								}}
-							>
-								{whatsapps?.length > 0 &&
-									whatsapps.map((whatsapp, key) => (
-										<MenuItem dense key={key} value={whatsapp.id}>
-											<ListItemText
-												primary={
-													<>
-														{IconChannel(whatsapp.channel)}
-														<Typography component="span" style={{ fontSize: 14, marginLeft: "10px", display: "inline-flex", alignItems: "center", lineHeight: "2" }}>
-															{whatsapp.name} &nbsp; <p className={(whatsapp.status) === 'CONNECTED' ? classes.online : classes.offline} >({whatsapp.status})</p>
-														</Typography>
-													</>
-												}
-											/>
 										</MenuItem>
 									))}
 							</Select>

@@ -20,15 +20,12 @@ import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import ColorPicker from "../ColorPicker";
 import {
+  Grid,
   IconButton,
   InputAdornment,
   Paper,
   Tab,
   Tabs,
-  FormControlLabel,
-  Select,
-  Switch,
-  MenuItem
 } from "@material-ui/core";
 import { Colorize } from "@material-ui/icons";
 import { QueueOptions } from "../QueueOptions";
@@ -83,8 +80,6 @@ const QueueModal = ({ open, onClose, queueId }) => {
     color: "",
     greetingMessage: "",
     outOfHoursMessage: "",
-    tempoRoteador: "",
-    ativarRoteador: false,
   };
 
   const [colorPickerModalOpen, setColorPickerModalOpen] = useState(false);
@@ -133,8 +128,6 @@ const QueueModal = ({ open, onClose, queueId }) => {
         name: "",
         color: "",
         greetingMessage: "",
-        tempoRoteador: "",
-        ativarRoteador: false
       });
     };
   }, [queueId, open]);
@@ -259,36 +252,6 @@ const QueueModal = ({ open, onClose, queueId }) => {
                         });
                       }}
                     />
-                    <FormControlLabel 
-                      control={
-                        <Field
-                          as={Switch}
-                          color="primary"
-                          name="ativarRoteador"
-                          checked={values.ativarRoteador}
-                        />
-                      }
-                      label="Rodízio"
-                    />
-                    <Field
-  						as={Select}
-  						label="Tempo de Rodízio"
-  						name="tempoRoteador"
-  						error={touched.tempoRoteador && Boolean(errors.tempoRoteador)}
-  						helperText={touched.tempoRoteador && errors.tempoRoteador}
-  						variant="outlined"
-  						margin="dense"
-  						className={classes.selectField}
-					>
-						<MenuItem value="0" selected disabled>Tempo de Rodízio</MenuItem>
-                        <MenuItem value="2">2 minutos</MenuItem>
-  						<MenuItem value="5">5 minutos</MenuItem>
-  						<MenuItem value="10">10 minutos</MenuItem>
-  						<MenuItem value="15">15 minutos</MenuItem>
-                        <MenuItem value="30">30 minutos</MenuItem>
-  						<MenuItem value="45">45 minutos</MenuItem>
-  						<MenuItem value="60">60 minutos</MenuItem>
-				    </Field>
                     <div style={{ marginTop: 5 }}>
                           <Field
                             as={TextField}

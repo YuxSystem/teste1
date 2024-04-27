@@ -13,8 +13,6 @@ import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import FlagIcon from '@material-ui/icons/Flag';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import IconButton from "@material-ui/core/IconButton";
@@ -90,10 +88,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    background: theme.palette.fundoBackground,
-  },
-  icon: {
-    color: theme.palette.corIconespaginas
   },
 }));
 
@@ -101,7 +95,6 @@ const Tags = () => {
   const classes = useStyles();
 
   const { user } = useContext(AuthContext);
-  const { id, profile, name } = user;
 
   const [loading, setLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
@@ -222,7 +215,7 @@ const Tags = () => {
         tagId={selectedTag && selectedTag.id}
       />
       <MainHeader>
-        <Title>{i18n.t("tags.title")} ({tags.length})</Title>
+        <Title>{i18n.t("tags.title")}</Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
@@ -254,9 +247,7 @@ const Tags = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">"ID"</TableCell>
               <TableCell align="center">{i18n.t("tags.table.name")}</TableCell>
-              <TableCell align="center">"Kanban"</TableCell>
               <TableCell align="center">
                 {i18n.t("tags.table.tickets")}
               </TableCell>
@@ -267,11 +258,8 @@ const Tags = () => {
           </TableHead>
           <TableBody>
             <>
-              {tags
-    			.sort((a, b) => b.id - a.id) // Sort the tags array in descending order based on the id
-    			.map((tag) => (
+              {tags.map((tag) => (
                 <TableRow key={tag.id}>
-                  <TableCell align="center">{tag.id}</TableCell>
                   <TableCell align="center">
                     <Chip
                       variant="outlined"
@@ -284,27 +272,13 @@ const Tags = () => {
                       size="small"
                     />
                   </TableCell>
-				  <TableCell align="center">
-  					{tag.kanban === 1 ? (
-    					<CheckCircleIcon style={{ color: 'green' }} />
-  						) : (
-    					''
-  						)}
-				  </TableCell>
-				  <TableCell align="center">{tag.ticketsCount}</TableCell>
+                  <TableCell align="center">{tag.ticketsCount}</TableCell>
                   <TableCell align="center">
-                  <>
-                  {((user.profile === "admin" || user.profile === "supervisor")) && (
-                    <IconButton  className={classes.icon} size="small" onClick={() => handleEditTag(tag)}>
+                    <IconButton size="small" onClick={() => handleEditTag(tag)}>
                       <EditIcon />
                     </IconButton>
-                    
-                  )}
-          
-                    
-                  {((user.profile === "admin" || user.profile === "supervisor")) && (
 
-                    <IconButton className={classes.icon}
+                    <IconButton
                       size="small"
                       onClick={(e) => {
                         setConfirmModalOpen(true);
@@ -313,11 +287,6 @@ const Tags = () => {
                     >
                       <DeleteOutlineIcon />
                     </IconButton>
-                    
-                    )}
-                    
-                 </>
-                 
                   </TableCell>
                 </TableRow>
               ))}

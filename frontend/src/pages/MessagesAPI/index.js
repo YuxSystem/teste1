@@ -14,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(2),
-    paddingBottom: 100,
-    background: theme.palette.fundoBackground,
+    paddingBottom: 100
   },
   mainHeader: {
     marginTop: theme.spacing(1),

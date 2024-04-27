@@ -18,6 +18,7 @@ import CreateMessageService from "../MessageServices/CreateMessageService";
 
 type Session = WASocket & {
   id?: number;
+  store?: Store;
 };
 
 interface IContact {
@@ -33,6 +34,10 @@ const wbotMonitor = async (
     wbot.ws.on("CB:call", async (node: BinaryNode) => {
       const content = node.content[0] as any;
 
+      if (content.tag === "offer") {
+        const { from, id } = node.attrs;
+        //console.log(`${from} is calling you with id ${id}`);
+      }
 
       if (content.tag === "terminate") {
         const sendMsgCall = await Setting.findOne({
@@ -68,7 +73,7 @@ const wbotMonitor = async (
 
           const body = `Chamada de voz/vídeo perdida às ${hours}:${minutes}`;
           const messageData = {
-            wid: content.attrs["call-id"],
+            id: content.attrs["call-id"],
             ticketId: ticket.id,
             contactId: contact.id,
             body,
@@ -102,7 +107,6 @@ const wbotMonitor = async (
         contacts,
       });
     });
-
 
   } catch (err) {
     Sentry.captureException(err);

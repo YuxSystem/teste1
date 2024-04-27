@@ -248,7 +248,6 @@ const messages = {
 				listItems: {
 					dashboard: "Dashboard",
 					connections: "Connections",
-					todolist: "to-Do List",
 					tickets: "Tickets",
 					contacts: "Contacts",
 					queues: "Queues",

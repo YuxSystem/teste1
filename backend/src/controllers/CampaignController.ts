@@ -14,12 +14,6 @@ import FindService from "../services/CampaignService/FindService";
 
 import Campaign from "../models/Campaign";
 
-import TicketTag from "../models/TicketTag";
-import Ticket from "../models/Ticket";
-import Contact from "../models/Contact";
-import ContactList from "../models/ContactList";
-import ContactListItem from "../models/ContactListItem";
-
 import AppError from "../errors/AppError";
 import { CancelService } from "../services/CampaignService/CancelService";
 import { RestartService } from "../services/CampaignService/RestartService";
@@ -37,7 +31,6 @@ type StoreData = {
   scheduledAt: string;
   companyId: number;
   contactListId: number;
-  tagListId: number | string;
 };
 
 type FindParams = {
@@ -71,86 +64,18 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     throw new AppError(err.message);
   }
 
-  if (typeof data.tagListId === 'number') {
+  const record = await CreateService({
+    ...data,
+    companyId
+  });
 
-    const tagId = data.tagListId;
-    const campanhaNome = data.name;
+  const io = getIO();
+  io.emit(`company-${companyId}-campaign`, {
+    action: "create",
+    record
+  });
 
-      async function createContactListFromTag(tagId) {
-
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString();
-
-        try {
-          const ticketTags = await TicketTag.findAll({ where: { tagId } });
-          const ticketIds = ticketTags.map((ticketTag) => ticketTag.ticketId);
-
-          const tickets = await Ticket.findAll({ where: { id: ticketIds } });
-          const contactIds = tickets.map((ticket) => ticket.contactId);
-
-          const contacts = await Contact.findAll({ where: { id: contactIds } });
-
-          const randomName = `${campanhaNome} | TAG: ${tagId} - ${formattedDate}` // Implement your own function to generate a random name
-          const contactList = await ContactList.create({ name: randomName, companyId: companyId });
-
-          const { id: contactListId } = contactList;
-
-          const contactListItems = contacts.map((contact) => ({
-            name: contact.name,
-            number: contact.number,
-            email: contact.email,
-            contactListId,
-            companyId,
-            isWhatsappValid: true,
-            
-          }));
-
-          await ContactListItem.bulkCreate(contactListItems);
-
-          // Return the ContactList ID
-          return contactListId;
-        } catch (error) {
-          console.error('Error creating contact list:', error);
-          throw error;
-        }
-    }
-
-
-    createContactListFromTag(tagId)
-    .then(async (contactListId) => { 
-      const record = await CreateService({
-        ...data,
-        companyId,
-        contactListId: contactListId,
-      });
-      const io = getIO();
-      io.emit(`company-${companyId}-campaign`, {
-        action: "create",
-        record
-      });
-      return res.status(200).json(record);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      return res.status(500).json({ error: 'Error creating contact list' });
-    });
-
-  }else{ // SAI DO CHECK DE TAG
-
-
-    const record = await CreateService({
-      ...data,
-      companyId
-    });
-
-    const io = getIO();
-    io.emit(`company-${companyId}-campaign`, {
-      action: "create",
-      record
-    });
-
-    return res.status(200).json(record);
-  }
+  return res.status(200).json(record);
 };
 
 export const show = async (req: Request, res: Response): Promise<Response> => {

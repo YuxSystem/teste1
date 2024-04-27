@@ -21,7 +21,6 @@ import Queue from "./Queue";
 import UserQueue from "./UserQueue";
 import Company from "./Company";
 import QuickMessage from "./QuickMessage";
-import Whatsapp from "./Whatsapp";
 
 @Table
 class User extends Model<User> {
@@ -93,25 +92,6 @@ class User extends Model<User> {
   public checkPassword = async (password: string): Promise<boolean> => {
     return compare(password, this.getDataValue("passwordHash"));
   };
-
-  @Default("disable")
-  @Column
-  allTicket: string;
-
-  @Default("disabled")
-  @Column
-  allHistoric: string;
-
-  @Default("disabled")
-  @Column
-  allUserChat: string;
-
-  @ForeignKey(() => Whatsapp)
-  @Column
-  whatsappId: number;
-
-  @BelongsTo(() => Whatsapp)
-  whatsapp: Whatsapp;
 }
 
 export default User;

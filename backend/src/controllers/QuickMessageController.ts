@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { Request, Response } from "express";
 import { getIO } from "../libs/socket";
-import { head } from "lodash";
+
 import ListService from "../services/QuickMessageService/ListService";
 import CreateService from "../services/QuickMessageService/CreateService";
 import ShowService from "../services/QuickMessageService/ShowService";
@@ -10,23 +10,19 @@ import DeleteService from "../services/QuickMessageService/DeleteService";
 import FindService from "../services/QuickMessageService/FindService";
 
 import QuickMessage from "../models/QuickMessage";
-import fs from "fs";
-import path from "path";
+
 import AppError from "../errors/AppError";
 
 type IndexQuery = {
   searchParam: string;
   pageNumber: string;
-  userId: string | number;  
+  userId: string | number;
 };
 
 type StoreData = {
   shortcode: string;
   message: string;
   userId: number | number;
-  mediaPath?: string;
-  mediaName?: string;
-  geral: boolean;
 };
 
 type FindParams = {
@@ -148,48 +144,3 @@ export const findList = async (
 
   return res.status(200).json(records);
 };
-
-
-export const mediaUpload = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  const { id } = req.params;
-  const files = req.files as Express.Multer.File[];
-  const file = head(files);
-
-  try {
-    const quickmessage = await QuickMessage.findByPk(id);
-    quickmessage.mediaPath = file.filename;
-    quickmessage.mediaName = file.originalname;
-    const shortcode = `[${quickmessage.shortcode}]`; // Add this line to get the shortcode in the desired format
-    quickmessage.message = shortcode;
-    await quickmessage.save();
-    return res.send({ mensagem: "Arquivo Anexado" });
-    } catch (err: any) {
-      throw new AppError(err.message);
-  }
-};
-
-export const deleteMedia = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  const { id } = req.params;
-
-  try {
-    const quickmessage = await QuickMessage.findByPk(id);
-    const filePath = path.resolve("public", quickmessage.mediaPath);
-    const fileExists = fs.existsSync(filePath);
-    if (fileExists) {
-      fs.unlinkSync(filePath);
-    }
-    quickmessage.mediaPath = null;
-    quickmessage.mediaName = null;
-    await quickmessage.save();
-    return res.send({ mensagem: "Arquivo Excluído" });
-    } catch (err: any) {
-      throw new AppError(err.message);
-  }
-};
-  

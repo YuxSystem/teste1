@@ -24,19 +24,18 @@ import OnlyForSuperUser from "../../components/OnlyForSuperUser";
 const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
+    backgroundColor: theme.palette.background.paper,
   },
   mainPaper: {
-    backgroundColor: theme.palette.fundoBackground,
     ...theme.scrollbarStyles,
     overflowY: "scroll",
     flex: 1,
   },
   tab: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.options,
     borderRadius: 4,
   },
   paper: {
-    backgroundColor: theme.palette.fundoBackground,
     ...theme.scrollbarStyles,
     overflowY: "scroll",
     padding: theme.spacing(2),
@@ -45,12 +44,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   container: {
-    backgroundColor: theme.palette.fundoBackground,
     width: "100%",
     maxHeight: "100%",
   },
   control: {
-    backgroundColor: theme.palette.fundoBackground,
     padding: theme.spacing(1),
   },
   textfield: {

@@ -28,7 +28,6 @@ import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
-    backgroundColor: theme.palette.fancyBackground,
     display: "flex",
     flexDirection: "column",
     position: "relative",
@@ -39,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid rgba(0, 0, 0, 0.12)",
   },
   gridContainer: {
-    backgroundColor: theme.palette.fundoBackground,
     flex: 1,
     height: "100%",
     border: "1px solid rgba(0, 0, 0, 0.12)",
+    backgroundColor: theme.palette.dark,
   },
   gridItem: {
     height: "100%",
@@ -82,6 +81,16 @@ export function ChatModal({
 
   const handleSave = async () => {
     try {
+      if (!title) {
+        alert("Por favor, preencha o título da conversa.");
+        return;
+      }
+
+      if (!users || users.length === 0) {
+        alert("Por favor, selecione pelo menos um usuário.");
+        return;
+      }
+
       if (type === "edit") {
         await api.put(`/chats/${chat.id}`, {
           users,
@@ -96,7 +105,7 @@ export function ChatModal({
       }
       handleClose();
     } catch (err) {}
-  };
+  };  
 
   return (
     <Dialog
@@ -323,7 +332,7 @@ function Chat(props) {
     return (
       <Grid className={classes.gridContainer} container>
         <Grid className={classes.gridItem} md={3} item>
-          {user.profile === "admin" && (
+          
             <div className={classes.btnContainer}>
               <Button
                 onClick={() => {
@@ -336,7 +345,7 @@ function Chat(props) {
                 Nova
               </Button>
             </div>
-          )}
+          
           <ChatList
             chats={chats}
             pageInfo={chatsPageInfo}

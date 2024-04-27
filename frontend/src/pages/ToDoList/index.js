@@ -10,15 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     margin: '2rem'
-  },
-  icon: {
-    color: theme.palette.corIconespaginas
   },
   inputContainer: {
     display: 'flex',
@@ -33,15 +30,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%',
     marginTop: '1rem',
-    backgroundColor: theme.palette.fundoBackground,
-    color: theme.palette.textPrimary,
+    backgroundColor: '#f5f5f5',
     borderRadius: '5px',
   },
   list: {
-    marginBottom: '5px',
-    color: theme.palette.textPrimary,
-  },
-}));
+    marginBottom: '5px'
+  }
+});
 
 const ToDoList = () => {
   const classes = useStyles();
@@ -117,10 +112,10 @@ const ToDoList = () => {
             <ListItem key={index} className={classes.list}>
               <ListItemText primary={task.text} secondary={task.updatedAt.toLocaleString()} />
               <ListItemSecondaryAction>
-                <IconButton className={classes.icon} onClick={() => handleEditTask(index)}>
+                <IconButton onClick={() => handleEditTask(index)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton className={classes.icon} onClick={() => handleDeleteTask(index)}>
+                <IconButton onClick={() => handleDeleteTask(index)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>

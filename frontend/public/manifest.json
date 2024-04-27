@@ -1,6 +1,6 @@
 {
-	"short_name": "Antecipador",
-	"name": "Antecipador",
+	"short_name": "Chat Link",
+	"name": "Chat Link",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -15,6 +15,6 @@
 	],
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#0F1B20",
+	"theme_color": "#000000",
 	"background_color": "#ffffff"
 }

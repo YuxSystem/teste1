@@ -12,7 +12,6 @@ import queueRoutes from "./queueRoutes";
 import companyRoutes from "./companyRoutes";
 import planRoutes from "./planRoutes";
 import ticketNoteRoutes from "./ticketNoteRoutes";
-import ticketTagRoutes from "./ticketTagRoutes";
 import quickMessageRoutes from "./quickMessageRoutes";
 import helpRoutes from "./helpRoutes";
 import dashboardRoutes from "./dashboardRoutes";
@@ -27,10 +26,7 @@ import announcementRoutes from "./announcementRoutes";
 import chatRoutes from "./chatRoutes";
 import invoiceRoutes from "./invoicesRoutes";
 import subscriptionRoutes from "./subScriptionRoutes";
-import webHookMetaRoutes from "./WebHookMetaRoutes";
-import forgotsRoutes from "./forgotPasswordRoutes";
-import emailRoute from "./emailRoute";
-import openAiRoutes from "./openAiRoutes";
+import ticketTagRoutes from "./ticketTagRoutes";
 
 const routes = Router();
 
@@ -47,7 +43,6 @@ routes.use(queueRoutes);
 routes.use(companyRoutes);
 routes.use(planRoutes);
 routes.use(ticketNoteRoutes);
-routes.use(ticketTagRoutes);
 routes.use(quickMessageRoutes);
 routes.use(helpRoutes);
 routes.use(dashboardRoutes);
@@ -62,9 +57,6 @@ routes.use(announcementRoutes);
 routes.use(chatRoutes);
 routes.use(subscriptionRoutes);
 routes.use(invoiceRoutes);
-routes.use("/webhook/fb", webHookMetaRoutes);
-routes.use(forgotsRoutes);
-routes.use(emailRoute);
-routes.use(openAiRoutes);
+routes.use(ticketTagRoutes);
 
 export default routes;

@@ -10,56 +10,69 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-import {
-	InputAdornment,
-	IconButton
-} from '@material-ui/core';
 import { i18n } from "../../translate/i18n";
 
 import { AuthContext } from "../../context/Auth/AuthContext";
 import logo from "../../assets/logo.png";
-import fundofoto from "../../assets/background.jpg";
+
+
+const Copyright = () => {
+	return (
+		<Typography variant="body2" color="primary" align="center">
+			{"Copyright "}
+ 			<Link color="primary" href="#">
+ 				PLW
+ 			</Link>{" "}
+ 			{new Date().getFullYear()}
+ 			{"."}
+ 		</Typography>
+ 	);
+ };
 
 const useStyles = makeStyles(theme => ({
 	root: {
+		width: "100vw",
+		height: "100vh",
+		background: "linear-gradient(to bottom right, #03bd9d, #ffffff)",
+		// backgroundImage: "url(https://siteconnect.com.br/wp-content/uploads/2023/03/cinema-scaled-1.jpg)",
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "100% 100%",
+		backgroundPosition: "center",
 		display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: '100vh',
-        backgroundImage: `url(${fundofoto})`, // Adicione o plano de fundo aqui
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center center',
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		textAlign: "center",
 	},
 	paper: {
-		backgroundColor: 'rgba(15, 27, 32, 0.7)',
-		display: "flex",		
+		backgroundColor: theme.palette.login, //DARK MODE PLW DESIGN//
+		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
 		padding: "55px 30px",
-		borderRadius: "12px 12px 12px 12px",
+		borderRadius: "12.5px",
 	},
 	avatar: {
 		margin: theme.spacing(1),  
 		backgroundColor: theme.palette.secondary.main,
 	},
 	form: {
-		width: "100%",
+		width: "100%", // Fix IE 11 issue.
 		marginTop: theme.spacing(1),
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	powered: {
+		color: "white"
+	}
 }));
 
 const Login = () => {
 	const classes = useStyles();
 
 	const [user, setUser] = useState({ email: "", password: "" });
-	const [showPassword, setShowPassword] = useState(false);
 
 	const { handleLogin } = useContext(AuthContext);
 
@@ -104,19 +117,7 @@ const Login = () => {
 						fullWidth
 						name="password"
 						label={i18n.t("login.form.password")}
-						type={showPassword ? 'text' : 'password'}
-						InputProps={{
-							endAdornment: (
-								<InputAdornment position="end">
-								<IconButton
-									aria-label="toggle password visibility"
-									onClick={() => setShowPassword((e) => !e)}
-								>
-									{showPassword ? <VisibilityOff /> : <Visibility />}
-								</IconButton>
-								</InputAdornment>
-							)
-						}}
+						type="password"
 						id="password"
 						value={user.password}
 						onChange={handleChangeInput}
@@ -131,17 +132,7 @@ const Login = () => {
 					>
 						{i18n.t("login.buttons.submit")}
 					</Button>
-                    <Grid container>
-						<Grid item>
-							<Link
-								href="#"
-								variant="body2"
-								component={RouterLink}
-								to="/forgetpsw"
-							>
-								{i18n.t("Esqueci minha senha")}
-							</Link>
-						</Grid>
+					{ <Grid container>
 						<Grid item>
 							<Link
 								href="#"
@@ -152,9 +143,12 @@ const Login = () => {
 								{i18n.t("login.buttons.register")}
 							</Link>
 						</Grid>
-					</Grid> 
+					</Grid> }
 				</form>
+			
 			</div>
+			
+			
 		</Container>
 		</div>
 	);

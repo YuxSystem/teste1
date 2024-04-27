@@ -80,10 +80,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    background: theme.palette.fundoBackground,
-  },
-  icon: {
-    color: theme.palette.corIconespaginas
   },
 }));
 
@@ -209,7 +205,7 @@ const Users = () => {
         userId={selectedUser && selectedUser.id}
       />
       <MainHeader>
-        <Title>{i18n.t("users.title")} ({users.length})</Title>
+        <Title>{i18n.t("users.title")}</Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
@@ -261,14 +257,14 @@ const Users = () => {
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.profile}</TableCell>
                   <TableCell align="center">
-                    <IconButton className={classes.icon}
+                    <IconButton
                       size="small"
                       onClick={() => handleEditUser(user)}
                     >
                       <EditIcon />
                     </IconButton>
 
-                    <IconButton className={classes.icon}
+                    <IconButton
                       size="small"
                       onClick={(e) => {
                         setConfirmModalOpen(true);

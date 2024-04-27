@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
@@ -19,15 +19,11 @@ import { i18n } from "../../translate/i18n";
 
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
-import { FormControl, Grid, IconButton } from "@material-ui/core";
+import { FormControl } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment"
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { isArray, capitalize } from "lodash";
-import DeleteOutline from "@material-ui/icons/DeleteOutline";
-import AttachFile from "@material-ui/icons/AttachFile";
-import { head } from "lodash";
-import ConfirmationModal from "../ConfirmationModal";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -87,9 +83,6 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 	const [schedule, setSchedule] = useState(initialState);
 	const [currentContact, setCurrentContact] = useState(initialContact);
 	const [contacts, setContacts] = useState([initialContact]);
-	const [attachment, setAttachment] = useState(null);
-	const attachmentFile = useRef(null);
-	const [confirmationOpen, setConfirmationOpen] = useState(false);
 
 	useEffect(() => {
 		if (contactId && contacts.length) {
@@ -132,15 +125,7 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 
 	const handleClose = () => {
 		onClose();
-		setAttachment(null);
 		setSchedule(initialState);
-	};
-
-	const handleAttachmentFile = (e) => {
-		const file = head(e.target.files);
-		if (file) {
-			setAttachment(file);
-		}
 	};
 
 	const handleSaveSchedule = async values => {
@@ -148,21 +133,8 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 		try {
 			if (scheduleId) {
 				await api.put(`/schedules/${scheduleId}`, scheduleData);
-				if (attachment != null) {
-					const formData = new FormData();
-					formData.append("file", attachment);
-					await api.post(
-					  `/schedules/${scheduleId}/media-upload`,
-					  formData
-					);
-				  }
 			} else {
-				const { data } = await api.post("/schedules", scheduleData);
-				if (attachment != null) {
-					const formData = new FormData();
-					formData.append("file", attachment);
-					await api.post(`/schedules/${data.id}/media-upload`, formData);
-				  }
+				await api.post("/schedules", scheduleData);
 			}
 			toast.success(i18n.t("scheduleModal.success"));
 			if (typeof reload == 'function') {
@@ -182,37 +154,8 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 		handleClose();
 	};
 
-	const deleteMedia = async () => {
-		if (attachment) {
-			setAttachment(null);
-			attachmentFile.current.value = null;
-		}
-
-		if (schedule.mediaPath) {
-			await api.delete(`/schedules/${schedule.id}/media-upload`);
-			setSchedule((prev) => ({
-				...prev,
-				mediaPath: null,
-			}));
-			toast.success(i18n.t("scheduleModal.toasts.deleted"));
-			if (typeof reload == "function") {
-				console.log(reload);
-				console.log("1");
-				reload();
-			}
-		}
-	};
-
 	return (
 		<div className={classes.root}>
-			<ConfirmationModal
-				title={i18n.t("scheduleModal.confirmationModal.deleteTitle")}
-				open={confirmationOpen}
-				onClose={() => setConfirmationOpen(false)}
-				onConfirm={deleteMedia}
-			>
-				{i18n.t("scheduleModal.confirmationModal.deleteMessage")}
-			</ConfirmationModal>
 			<Dialog
 				open={open}
 				onClose={handleClose}
@@ -223,14 +166,6 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 				<DialogTitle id="form-dialog-title">
 					{schedule.status === 'ERRO' ? 'Erro de Envio' : `Mensagem ${capitalize(schedule.status)}`}
 				</DialogTitle>
-				<div style={{ display: "none" }}>
-					<input
-						type="file"
-						accept=".png,.jpg,.jpeg"
-						ref={attachmentFile}
-						onChange={(e) => handleAttachmentFile(e)}
-					/>
-				</div>
 				<Formik
 					initialValues={schedule}
 					enableReinitialize={true}
@@ -298,31 +233,8 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 										fullWidth
 									/>
 								</div>
-								{(schedule.mediaPath || attachment) && (
-									<Grid xs={12} item>
-										<Button startIcon={<AttachFile />}>
-											{attachment ? attachment.name : schedule.mediaName}
-										</Button>
-										<IconButton
-											onClick={() => setConfirmationOpen(true)}
-											color="secondary"
-										>
-											<DeleteOutline color="secondary" />
-										</IconButton>
-									</Grid>
-								)}
 							</DialogContent>
 							<DialogActions>
-								{!attachment && !schedule.mediaPath && (
-									<Button
-										color="primary"
-										onClick={() => attachmentFile.current.click()}
-										disabled={isSubmitting}
-										variant="outlined"
-									>
-										{i18n.t("quickemessage.dialog.buttons.attach")}
-									</Button>
-								)}
 								<Button
 									onClick={handleClose}
 									color="secondary"

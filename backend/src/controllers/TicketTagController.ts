@@ -6,9 +6,6 @@ import Tag from '../models/Tag'
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const { ticketId, tagId } = req.params;
 
-  console.log("store");
-  console.log(req.params);
-
   try {
     const ticketTag = await TicketTag.create({ ticketId, tagId });
     return res.status(201).json(ticketTag);
@@ -53,6 +50,7 @@ export const remove = async (req: Request, res: Response): Promise<Response> => 
 
     // Remove the tagIds with kanban = 1 from TicketTags
     const tagIdsWithKanbanOne = tagsWithKanbanOne.map((tag) => tag.id);
+    if (tagIdsWithKanbanOne)
     await TicketTag.destroy({ where: { ticketId, tagId: tagIdsWithKanbanOne } });
 
     return res.status(200).json({ message: 'Ticket tags removed successfully.' });

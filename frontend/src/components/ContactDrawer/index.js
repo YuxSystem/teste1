@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -17,11 +16,10 @@ import { i18n } from "../../translate/i18n";
 
 import ContactDrawerSkeleton from "../ContactDrawerSkeleton";
 import MarkdownWrapper from "../MarkdownWrapper";
-import { CardHeader, Switch } from "@material-ui/core";
+import { CardHeader } from "@material-ui/core";
 import { ContactForm } from "../ContactForm";
 import ContactModal from "../ContactModal";
 import { ContactNotes } from "../ContactNotes";
-import toastError from "../../errors/toastError";
 
 const drawerWidth = 320;
 
@@ -42,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 	header: {
 		display: "flex",
 		borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-		background: theme.palette.contactdrawer,
+		backgroundColor: theme.palette.contactdrawer, //DARK MODE PLW DESIGN//
 		alignItems: "center",
 		padding: theme.spacing(0, 1),
 		minHeight: "73px",
@@ -50,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	content: {
 		display: "flex",
-		background: theme.palette.total,
+		backgroundColor: theme.palette.contactdrawer, //DARK MODE PLW DESIGN//
 		flexDirection: "column",
 		padding: "8px 0px 8px 8px",
 		height: "100%",
@@ -92,26 +90,11 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [openForm, setOpenForm] = useState(false);
-	const [disableBot, setDisableBot] = useState(contact.disableBot);
 
 	useEffect(() => {
 		setOpenForm(false);
-		setDisableBot(contact.disableBot)
 	}, [open, contact]);
 
-	const handleContactToggleDisableBot = async () => {
-
-		const { id } = contact;
-
-		try {
-			const { data } = await api.put(`/contacts/toggleDisableBot/${id}`);
-			contact.disableBot = data.disableBot;
-			setDisableBot(data.disableBot)
-
-		} catch (err) {
-			toastError(err);
-		}
-	};
 	return (
 		<>
 			<Drawer
@@ -137,32 +120,13 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 						{i18n.t("contactDrawer.header")}
 					</Typography>
 				</div>
-				<div>
-					{!loading ? (
-						<>
-							<Typography
-								style={{ marginBottom: 8, marginTop: 12 }}
-								variant="subtitle1"
-							>
-								<Switch
-									size="small"
-									checked={disableBot}
-									onChange={() => handleContactToggleDisableBot()}
-									name="disableBot"
-									color="primary"
-								/>
-									{i18n.t("contactModal.form.chatBotContact")}
-							</Typography>
-						</>
-					) : (<br />)}					
-				</div>
 				{loading ? (
 					<ContactDrawerSkeleton classes={classes} />
 				) : (
 					<div className={classes.content}>
 						<Paper square variant="outlined" className={classes.contactHeader}>
 							<CardHeader
-								onClick={() => { }}
+								onClick={() => {}}
 								style={{ cursor: "pointer", width: '100%' }}
 								titleTypographyProps={{ noWrap: true }}
 								subheaderTypographyProps={{ noWrap: true }}
@@ -171,16 +135,16 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 									<>
 										<Typography onClick={() => setOpenForm(true)}>
 											{contact.name}
-											<CreateIcon style={{ fontSize: 16, marginLeft: 5 }} />
+											<CreateIcon style={{fontSize: 16, marginLeft: 5}} />
 										</Typography>
 									</>
 								}
 								subheader={
 									<>
-										<Typography style={{ fontSize: 12 }}>
+										<Typography style={{fontSize: 12}}>
 											<Link href={`tel:${contact.number}`}>{contact.number}</Link>
 										</Typography>
-										<Typography style={{ fontSize: 12 }}>
+										<Typography style={{fontSize: 12}}>
 											<Link href={`mailto:${contact.email}`}>{contact.email}</Link>
 										</Typography>
 									</>
@@ -190,14 +154,14 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 								variant="outlined"
 								color="primary"
 								onClick={() => setModalOpen(!openForm)}
-								style={{ fontSize: 12 }}
+								style={{fontSize: 12}}
 							>
 								{i18n.t("contactDrawer.buttons.edit")}
 							</Button>
 							{(contact.id && openForm) && <ContactForm initialContact={contact} onCancel={() => setOpenForm(false)} />}
 						</Paper>
 						<Paper square variant="outlined" className={classes.contactDetails}>
-							<Typography variant="subtitle1" style={{ marginBottom: 10 }}>
+							<Typography variant="subtitle1" style={{marginBottom: 10}}>
 								{i18n.t("ticketOptionsMenu.appointmentsModal.title")}
 							</Typography>
 							<ContactNotes ticket={ticket} />

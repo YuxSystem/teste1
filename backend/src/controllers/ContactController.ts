@@ -17,7 +17,6 @@ import SimpleListService, {
   SearchContactParams
 } from "../services/ContactServices/SimpleListService";
 import ContactCustomField from "../models/ContactCustomField";
-import ToggleDisableBotContactService from "../services/ContactServices/ToggleDisableBotContactService";
 
 type IndexQuery = {
   searchParam: string;
@@ -38,7 +37,6 @@ interface ContactData {
   number: string;
   email?: string;
   extraInfo?: ExtraInfo[];
-  disableBot?: boolean;
 }
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
@@ -192,18 +190,4 @@ export const list = async (req: Request, res: Response): Promise<Response> => {
   const contacts = await SimpleListService({ name, companyId });
 
   return res.json(contacts);
-};
-
-export const toggleDisableBot = async (req: Request, res: Response): Promise<Response> => {
-  var { contactId } = req.params;
-  const { companyId} = req.user;
-  const contact = await ToggleDisableBotContactService({ contactId });
-
-  const io = getIO();
-  io.emit(`company-${companyId}-contact`, {
-    action: "update",
-    contact
-  });
-
-  return res.status(200).json(contact);
 };

@@ -73,9 +73,6 @@ const UserModal = ({ open, onClose, userId }) => {
 		email: "",
 		password: "",
 		profile: "user",
-		allHistoric: "disabled",
-		allUserChat: "disabled",
-		allTicket: "disable",
 	};
 
 	const { user: loggedInUser } = useContext(AuthContext);
@@ -126,7 +123,7 @@ const UserModal = ({ open, onClose, userId }) => {
 			<Dialog
 				open={open}
 				onClose={handleClose}
-				maxWidth="md"
+				maxWidth="xs"
 				fullWidth
 				scroll="paper"
 			>
@@ -222,85 +219,6 @@ const UserModal = ({ open, onClose, userId }) => {
 											selectedQueueIds={selectedQueueIds}
 											onChange={values => setSelectedQueueIds(values)}
 										/>
-									)}
-								/>
-								<Can
-									role={loggedInUser.profile}
-									perform="user-modal:editProfile"
-									yes={() => (
-										<>
-											<FormControl
-												variant="outlined"
-												className={classes.maxWidth}
-												margin="dense"
-												fullWidth
-											>
-												<>
-													<InputLabel >
-														{i18n.t("userModal.form.allTicket")}
-													</InputLabel>
-
-													<Field
-														as={Select}
-														label={i18n.t("userModal.form.allTicket")}
-														name="allTicket"
-														type="allTicket"
-														required
-													>
-														<MenuItem value="enable">{i18n.t("userModal.form.allTicketEnable")}</MenuItem>
-														<MenuItem value="disable">{i18n.t("userModal.form.allTicketDisable")}</MenuItem>
-													</Field>
-												</>
-											</FormControl>
-											<div className={classes.multFieldLine}>
-												<FormControl
-													variant="outlined"
-													className={classes.maxWidth}
-													margin="dense"
-													fullWidth
-												>
-													<>
-														<InputLabel >
-															{i18n.t("userModal.form.allHistoric")}
-														</InputLabel>
-
-														<Field
-															as={Select}
-															label={i18n.t("userModal.form.allHistoric")}
-															name="allHistoric"
-															type="allHistoric"
-															required
-														>
-															<MenuItem value="disabled">{i18n.t("userModal.form.allHistoricDisabled")}</MenuItem>
-															<MenuItem value="enabled">{i18n.t("userModal.form.allHistoricEnabled")}</MenuItem>
-														</Field>
-													</>
-												</FormControl>
-												<FormControl
-													variant="outlined"
-													className={classes.maxWidth}
-													margin="dense"
-													fullWidth
-												>
-													<>
-														<InputLabel >
-															{i18n.t("userModal.form.allUserChat")}
-														</InputLabel>
-
-														<Field
-															as={Select}
-															label={i18n.t("userModal.form.allUserChat")}
-															name="allUserChat"
-															type="allUserChat"
-															required
-														>
-															<MenuItem value="disabled">{i18n.t("userModal.form.allHistoricDisabled")}</MenuItem>
-															<MenuItem value="enabled">{i18n.t("userModal.form.allHistoricEnabled")}</MenuItem>
-														</Field>
-													</>
-												</FormControl>
-											</div>
-										</>
 									)}
 								/>
 							</DialogContent>

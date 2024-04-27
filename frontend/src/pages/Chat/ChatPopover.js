@@ -8,8 +8,7 @@ import React, {
 import { makeStyles } from "@material-ui/core/styles";
 import toastError from "../../errors/toastError";
 import Popover from "@material-ui/core/Popover";
-//import ForumIcon from "@material-ui/icons/Forum";
-import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
+import ForumIcon from "@material-ui/icons/Forum";
 import {
   Badge,
   IconButton,
@@ -36,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    //color: "#FFFFFF",
   },
 }));
 
@@ -144,7 +142,6 @@ export default function ChatPopover() {
       if (data.action === "new-message") {
         dispatch({ type: "CHANGE_CHAT", payload: data });
         if (data.newMessage.senderId !== user.id) {
-          console.log(data);
           soundAlertRef.current();
         }
       }
@@ -227,7 +224,7 @@ export default function ChatPopover() {
         style={{ color: "white" }}
       >
         <Badge color="secondary" variant="dot" invisible={invisible}>
-          <MarkunreadMailboxIcon />
+          <ForumIcon />
         </Badge>
       </IconButton>
       <Popover
@@ -259,8 +256,7 @@ export default function ChatPopover() {
                 <ListItem
                   key={key}
                   style={{
-                    //background: "#424242",
-                    border: "1px solid #424242",
+                    border: "1px solid #eee",
                     cursor: "pointer",
                   }}
                   onClick={() => goToMessages(item)}

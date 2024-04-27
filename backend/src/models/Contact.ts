@@ -42,10 +42,6 @@ class Contact extends Model<Contact> {
   @Column
   profilePicUrl: string;
 
-  @Default("whatsapp")
-  @Column
-  channel: string;
-
   @Default(false)
   @Column
   isGroup: boolean;
@@ -75,10 +71,6 @@ class Contact extends Model<Contact> {
     hooks: true
   })
   schedules: Schedule[];
-
-  @Default(false)
-  @Column
-  disableBot: boolean;
 }
 
 export default Contact;

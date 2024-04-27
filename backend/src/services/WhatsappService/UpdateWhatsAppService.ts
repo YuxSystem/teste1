@@ -54,8 +54,8 @@ const UpdateWhatsAppService = async ({
     ratingMessage,
     queueIds = [],
     token,
-    sendIdQueue,
-    timeSendQueue
+    timeSendQueue,
+    sendIdQueue = null,
   } = whatsappData;
 
   try {
@@ -96,8 +96,8 @@ const UpdateWhatsAppService = async ({
     isDefault,
     companyId,
     token,
+    timeSendQueue,
     sendIdQueue,
-    timeSendQueue
   });
 
   await AssociateWhatsappQueue(whatsapp, queueIds);

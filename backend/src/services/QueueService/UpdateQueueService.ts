@@ -10,8 +10,6 @@ interface QueueData {
   greetingMessage?: string;
   outOfHoursMessage?: string;
   schedules?: any[];
-  ativarRoteador?: boolean;
-  tempoRoteador: number;
 }
 
 const UpdateQueueService = async (
@@ -19,7 +17,7 @@ const UpdateQueueService = async (
   queueData: QueueData,
   companyId: number
 ): Promise<Queue> => {
-  const { color, name, ativarRoteador, tempoRoteador } = queueData;
+  const { color, name } = queueData;
 
   const queueSchema = Yup.object().shape({
     name: Yup.string()
